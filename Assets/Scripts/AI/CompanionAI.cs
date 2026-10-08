@@ -34,7 +34,9 @@ namespace Replica.AI
 
         [Header("Acompañante Montado / Volador")]
         [Tooltip("Offset relativo al jugador cuando está montado o volando")]
-        [SerializeField] private Vector3 mountedOffset = new Vector3(0f, 0.45f, -0.2f);
+        [SerializeField] private Vector3 mountedOffset = Vector3.zero;
+        [Tooltip("Rotación adicional en euler cuando está montado")]
+        [SerializeField] private Vector3 mountedRotationOffset = Vector3.zero;
         [Tooltip("Offset para vuelo sobre la cabeza")]
         [SerializeField] private Vector3 flyingOffset = new Vector3(0.5f, 1.8f, 0.3f);
         [Tooltip("Suavizado de posición para acompañantes voladores/montados")]
@@ -127,6 +129,9 @@ namespace Replica.AI
             {
                 if (agent != null && agent.enabled)
                     agent.enabled = false;
+
+                var col = GetComponent<Collider>();
+                if (col != null) col.enabled = false;
             }
             else
             {
@@ -142,6 +147,9 @@ namespace Replica.AI
         {
             isFollowing = false;
             isDelivered = true;
+
+            var col = GetComponent<Collider>();
+            if (col != null) col.enabled = true;
 
             if (companionType != CompanionType.GroundNavMesh)
             {
@@ -188,6 +196,7 @@ namespace Replica.AI
             float currentSpeed = agent.velocity.magnitude;
             if (animator != null)
             {
+                animator.speed = 1f;
                 animator.TrySetFloat("Speed", currentSpeed);
                 animator.TrySetBool("IsMoving", currentSpeed > 0.1f);
                 int animationId = currentSpeed < 0.1f ? DogAnimationIds.Idle
@@ -203,12 +212,12 @@ namespace Replica.AI
                 ? playerCtrl.mountPointBack 
                 : playerTarget;
 
-            Vector3 targetPosition = mountPoint.TransformPoint(mountedOffset);
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * followSmoothing);
-            transform.rotation = Quaternion.Slerp(transform.rotation, mountPoint.rotation, Time.deltaTime * followSmoothing);
+            transform.position = mountPoint.TransformPoint(mountedOffset);
+            transform.rotation = mountPoint.rotation * Quaternion.Euler(mountedRotationOffset);
 
             if (animator != null)
             {
+                animator.speed = 0f;
                 animator.TrySetBool("IsMounted", true);
             }
         }
@@ -230,6 +239,7 @@ namespace Replica.AI
 
             if (animator != null)
             {
+                animator.speed = 1f;
                 animator.TrySetBool("IsFlying", true);
                 animator.TrySetBool("flying", true); // controlador de "living birds"
             }
@@ -239,6 +249,7 @@ namespace Replica.AI
         {
             if (animator != null)
             {
+                animator.speed = 1f;
                 animator.TrySetFloat("Speed", 0f);
                 animator.TrySetBool("IsMoving", false);
                 animator.TrySetInteger(DogAnimationIds.ParameterName, DogAnimationIds.Idle);

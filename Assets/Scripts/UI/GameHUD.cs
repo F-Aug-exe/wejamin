@@ -58,6 +58,14 @@ namespace Replica.UI
                 questCounterText.text = $"Rescates: {completed} / {total}";
             }
         }
+
+        public void SetCustomQuestStatus(string text)
+        {
+            if (questCounterText != null)
+            {
+                questCounterText.text = text;
+            }
+        }
     }
 }
 

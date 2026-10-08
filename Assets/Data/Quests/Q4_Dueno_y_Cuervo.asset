@@ -15,27 +15,25 @@ MonoBehaviour:
   questId: Q4
   questTitle: Dueno y Cuervo
   ownerInitialDialogue:
-    speakerName: Dueno Cuervo
+    speakerName: Dueño Cuervo
     lines:
-    - text: Vieron un cuervo que habla mucho?
-      voiceOrSfx: {fileID: 0}
-    - text: Me ayudas a encontrarlo? (Presiona [E] para Aceptar Mision)
-      voiceOrSfx: {fileID: 0}
+    - text: "¿Vieron un cuervo que habla mucho?"
+      voiceOrSfx: {fileID: 8300000, guid: d16624f5e70e0067b9d5cf2be1efbc6e, type: 3}
   petFoundDialogue:
     speakerName: Cuervo
     lines:
-    - text: Hola canino, se me perdio un humano...
-      voiceOrSfx: {fileID: 0}
+    - text: "Hola canino, se me perdió un humano. Voy a volar contigo mientras lo busco, si no hay problema"
+      voiceOrSfx: {fileID: 8300000, guid: 546c1183d6e881deeabf1ebcc86b7d9e, type: 3}
   ownerDeliveredDialogue:
-    speakerName: Dueno Cuervo
+    speakerName: Dueño Cuervo
     lines:
-    - text: Chico! Te me habas perdido.
+    - text: "¡Chico! Te me habías perdido."
       voiceOrSfx: {fileID: 0}
   petDeliveredDialogue:
     speakerName: Cuervo
     lines:
-    - text: Caw! Aqu estoy!
-      voiceOrSfx: {fileID: 0}
+    - text: "¡Chico, te me habias perdido!"
+      voiceOrSfx: {fileID: 8300000, guid: 554dcb979bb510fd79f05ae0e90b097a, type: 3}
   onQuestStarted:
     m_PersistentCalls:
       m_Calls: []

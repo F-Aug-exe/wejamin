@@ -47,6 +47,9 @@ namespace Replica.Dialogue
                 dialoguePanel.SetActive(false);
 
             if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.spatialBlend = 0f; // Audio 2D para que las voces se escuchen nítidas independientemente de la cámara activa
+            audioSource.volume = 1f;
+            audioSource.playOnAwake = false;
         }
 
         private void Start()
@@ -134,8 +137,13 @@ namespace Replica.Dialogue
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
 
-            if (currentFullLine.voiceOrSfx != null && audioSource != null) {
-                audioSource.PlayOneShot(currentFullLine.voiceOrSfx);
+            if (audioSource != null)
+            {
+                audioSource.Stop();
+                if (currentFullLine.voiceOrSfx != null)
+                {
+                    audioSource.PlayOneShot(currentFullLine.voiceOrSfx);
+                }
             }
 
             if (typingSpeed > 0f)
@@ -188,6 +196,13 @@ namespace Replica.Dialogue
                 continueIndicator.SetActive(true);
         }
 
+        private bool keepPlayerLocked = false;
+        public bool KeepPlayerLocked
+        {
+            get => keepPlayerLocked;
+            set => keepPlayerLocked = value;
+        }
+
         private void EndDialogue()
         {
             IsInDialogue = false;
@@ -195,7 +210,7 @@ namespace Replica.Dialogue
             if (dialoguePanel != null)
                 dialoguePanel.SetActive(false);
 
-            if (cachedPlayerController != null)
+            if (cachedPlayerController != null && !keepPlayerLocked)
                 cachedPlayerController.CanMove = true;
 
             onDialogueEnded?.Invoke();

@@ -17,24 +17,24 @@ MonoBehaviour:
   ownerInitialDialogue:
     speakerName: Humano Ciego
     lines:
-    - text: Mi perro de asistencia, debe haberse asustado con el temblor...
-      voiceOrSfx: {fileID: 0}
-    - text: Me ayudas a buscarlo? (Presiona [E] para Aceptar Mision)
-      voiceOrSfx: {fileID: 0}
+    - text: "Mi perro de asistencia, debe haberse asustado..."
+      voiceOrSfx: {fileID: 8300000, guid: 3a73095fa26e3fe0992a7bc6d9492ba3, type: 3}
+    - text: "¿Alguien ayudelo por favor..."
+      voiceOrSfx: {fileID: 8300000, guid: 7419bee460ce8bfd28e3ace0a355270a, type: 3}
   petFoundDialogue:
-    speakerName: Perro Gua
+    speakerName: Perro Guía
     lines:
-    - text: Oye, viste a un humano ciego? Se me perdio...
-      voiceOrSfx: {fileID: 0}
+    - text: "Oye, ¿viste a un humano ciego? Se me perdio"
+      voiceOrSfx: {fileID: 8300000, guid: ad98102b04b91caa4ba94a5ff3add47c, type: 3}
   ownerDeliveredDialogue:
     speakerName: Humano Ciego
     lines:
-    - text: Amigo mo, estas aqu! Gracias, perrito.
+    - text: "¡Amigo mío, estás aquí! Gracias, perrito."
       voiceOrSfx: {fileID: 0}
   petDeliveredDialogue:
-    speakerName: Perro Gua
+    speakerName: Perro Guía
     lines:
-    - text: Sniff- Guau!
+    - text: "Sniff- ¡Guau!"
       voiceOrSfx: {fileID: 0}
   onQuestStarted:
     m_PersistentCalls:

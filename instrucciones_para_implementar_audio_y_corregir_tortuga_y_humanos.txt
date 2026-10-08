@@ -1,0 +1,75 @@
+Archivo .wav                │ Personaje    │ Misión / Línea
+  ─────────────────────────────┼──────────────┼──────────────────────────────
+   VO_Q1_Madre_Initial_01.wav  │ Madre        │ Q1: "El hijo mio esta
+                               │              │ saliendo de clase..."
+   VO_Q1_Madre_Initial_02.wav  │ Madre        │ Q1: "Pero aun no llega"
+   VO_Q1_Nino_Found_01.wav     │ Niño         │ Q1: "Nos dijeron que
+                               │              │ esperaramos a que nos vengan a buscar. Voy contigo?"
+   VO_Q1_Madre_Delivered_01.wa │ Madre        │ Q1: "Gracias perrito!"
+   v                           │              │ 
+   VO_Q1_Nino_Delivered_01.wav │ Niño         │ Q1: "¡Gracias perrito!"
+   VO_Q2_Anciana_Initial_01.wa │ Anciana      │ Q2: "Mi cachetoncitoo,
+   v                           │              │ ¿viste a mi cachetoncitoo?"
+   VO_Q2_Anciana_Initial_02.wa │ Anciana      │ Q2: "Cachetoncito!!!"
+   VO_Q2_Cachetoncito_Found_01 │ Cachetoncito │ Q2: "Uy loco mira que esta
+   .wav                        │              │ vieja se asusto y yo me abri, yo me parcho con usted"
+   VO_Q2_Anciana_Delivered_01. │ Anciana      │ Q2: "¡Cachetoncitoo!"
+   wav                         │              │
+   VO_Q2_Cachetoncito_Delivere │ Cachetoncito │ Q2: "¡Noooooo!"
+   d_01.wav                    │              │
+   VO_Q3_Ciego_Initial_01.wav  │ Humano Ciego │ Q3: "Mi perro de asistencia,
+                               │              │ debe haberse asustado..."
+   VO_Q3_Ciego_Initial_02.wav  │ Humano Ciego │ Q3: "¿Alguien ayudelo por favor..."
+   VO_Q3_PerroGuia_Found_01.wa │ Perro Guía   │ Q3: "Oye, ¿viste a un humano
+   v                           │              │ ciego? Se me perdio"
+   VO_Q3_Ciego_Delivered_01.wa │ Humano Ciego │ Q3: "¡Amigo mío, estás aquí!
+   v (ESTA LINEA DE VOZ NO FUE GRABADA, SOLO TEXTO)                      │              │ Gracias, perrito."
+   VO_Q3_PerroGuia_Delivered_0 │ Perro Guía   │ Q3: "Sniff- ¡Guau!"
+   1.wav   (ESTA TAMPOCO SE GRABO)      │              │
+   VO_Q4_DuenoCuervo_Initial_0 │ Dueño Cuervo │ Q4: "¿Vieron un cuervo que
+   1.wav                       │              │ habla mucho?"
+   VO_Q4_DuenoCuervo_Initial_0 │ Dueño Cuervo │ Q4: "¿Me ayudas a
+   2.wav  (ESTA LINEA DE VOZ NO FUE GRABADA)        │              │ encontrarlo?..."
+   VO_Q4_Cuervo_Found_01.wav   │ Cuervo       │ Q4: "Hola canino, se me
+                               │              │ perdió un humano. Voy a volar contigo mientras lo busco, si no hay problema)
+                               
+   VO_Q4_DuenoCuervo_Delivered │ Dueño Cuervo │ Q4: "¡Chico! Te me habías
+   _01.wav (ESTE DIALOGO NO DEBERIA EXISTIR, ESO LO DICE EL CUERVO)  │              │ perdido."
+   VO_Q4_Cuervo_Delivered_01.w │ Cuervo       │ Q4: "¡Chico, te me habias perdido!"
+   av                          │              │
+   VO_Q5_Mujer_Initial_01.wav  │ Mujer        │ Q5: "Saqué a pasear a mi
+                               │              │ tortuga y no la veo"
+   VO_Q5_Mujer_Initial_02.wav  │ Mujer        │ Q5: "Ayuda!"
+   VO_Q5_Tortuga_Found_01.wav  │ Tortuga      │ Q5: "Amigo, esa vieja me
+                               │              │ pateó y quede asi... ¿Me puedes llevar
+                               │              │ en tu lomo?"
+   VO_Q5_Mujer_Delivered_01.wa │ Mujer        │ Q5: "Mira! dónde estabas?"
+   VO_Q5_Tortuga_Delivered_01. │ Tortuga      │ Q5: "Tetranutria..."
+   wav                         │              │
+  
+  #### Secuencia Final (Q6)
+  
+   Archivo .wav                │ Personaje    │ Línea
+  ─────────────────────────────┼──────────────┼──────────────────────────────
+   VO_Q6_Cuervo_Warning_01.wav │ Cuervo       │ "¡Oye, perrito! Hay un humano preguntando por ti, sigueme"
+   VO_Q6_FalsoDueno_01.wav     │ Humano       │ "¿Qué? Ese no es mi perro..."
+                               │ Desconocido  │ 
+   VO_Q6_DuenoToby_01.wav   (ESTA LINEA NO EXISTE PERO PUEDE SER PURO TEXTO)   │ Dueño de     │ "¡Toby! ¡Estás vivo! ¡Ven
+                               │ Toby         │ aquí, amigo mío!"
+   VO_Q6_Cuervo_Ending_01.wav  │ Cuervo       │ "Seremos compañeros en desgracia y haremos mas livianas nuestras cargas"
+VO_Q6_Cuervo_Ending_02.wav (agregar este dialogo a un ultimo plano del cuervo volando) │ Cuervo       │   "Bendiciones y sigan resistiendo"
+   
+   
+   
+   
+   Los NPCS estan demasiado basicos (textura en blanco). Se supone que ese asset permite crear combinaciones para personajes creativos, hazlo e instruyeme de como modificarlos para que todos sean acordes a su questline 
+
+La tortuga sigue flotando un poco. De referencia, si la tortuga se esta mostrando en posicion (62,1,1) necesito que quede como en y=0,5 con rotacion X -10. 
+
+Revisa que ya puse los assets de audio e implementalos donde van
+
+loopcinematico.mp3 suena muy fuerte pero ponlo a sonar de fondo en la escena principal a un 10% de volumen para que no opaque las voces.
+
+
+
+Hagamos que la Q6 tenga logica de que el cuervo se reclute al darle el warning al jugador. Que aparezca como quest en curso ir a ver al duenoFalso, Ahi luego de interactuar con el falsodueno saldria otra quest en curso que llevaria al jugador toby con duenotoby. Luego la logica de que haya una cinematica donde el jugador solo controla la E para pasar el dialogo mientras hayan dos camaras distitnas en los dos dialogos de ending del cuervo, una apuntando a toby con su humano y la segunda apuntando al cuervo yendose volando

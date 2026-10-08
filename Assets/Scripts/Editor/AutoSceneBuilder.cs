@@ -19,9 +19,9 @@ using Replica.UI;
 namespace Replica.EditorTools
 {
     /// <summary>
-    /// Arma automáticamente la escena según la Guía de Integración:
-    /// jugador (perro con modelo y animaciones), cámara en tercera persona, colliders del entorno,
-    /// NPCs y mascotas con modelos, UI de diálogo/HUD, gestores y NavMesh (AI Navigation 2.x).
+    /// Arma automÃ¡ticamente la escena segÃºn la GuÃ­a de IntegraciÃ³n:
+    /// jugador (perro con modelo y animaciones), cÃ¡mara en tercera persona, colliders del entorno,
+    /// NPCs y mascotas con modelos, UI de diÃ¡logo/HUD, gestores y NavMesh (AI Navigation 2.x).
     /// Es seguro ejecutarlo varias veces: reutiliza lo que ya existe.
     /// </summary>
     public static class AutoSceneBuilder
@@ -45,12 +45,12 @@ namespace Replica.EditorTools
             public Vector3 offsetFromPlayer;
         }
 
-        // Mascotas primero (los dueños necesitan la referencia a su CompanionAI)
+        // Mascotas primero (los dueÃ±os necesitan la referencia a su CompanionAI)
         private static readonly NpcDef[] Pets =
         {
-            new NpcDef { objectName = "Ni�o",         displayName = "Ni�o",         questId = "Q1", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.GroundNavMesh, modelPath = HumanModelPath,             height = 1.1f,  offsetFromPlayer = new Vector3(-10f, 0f, 12f) },
+            new NpcDef { objectName = "Niño",         displayName = "Niño",         questId = "Q1", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.GroundNavMesh, modelPath = HumanModelPath,             height = 1.1f,  offsetFromPlayer = new Vector3(-10f, 0f, 12f) },
             new NpcDef { objectName = "Cachetoncito", displayName = "Cachetoncito", questId = "Q2", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.GroundNavMesh, modelPath = DogKit + "pug.prefab",            height = 0.75f, offsetFromPlayer = new Vector3(12f, 0f, -8f) },
-            new NpcDef { objectName = "Perro Guía",   displayName = "Perro Guía",   questId = "Q3", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.GroundNavMesh, modelPath = DogKit + "corgi.prefab",          height = 0.75f, offsetFromPlayer = new Vector3(-14f, 0f, -6f) },
+            new NpcDef { objectName = "Perro GuÃ­a",   displayName = "Perro GuÃ­a",   questId = "Q3", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.GroundNavMesh, modelPath = DogKit + "corgi.prefab",          height = 0.75f, offsetFromPlayer = new Vector3(-14f, 0f, -6f) },
             new NpcDef { objectName = "Cuervo",       displayName = "Cuervo",       questId = "Q4", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.Flying,        modelPath = CrowModelPath,                    height = 0.45f, offsetFromPlayer = new Vector3(4f, 0f, 16f) },
             new NpcDef { objectName = "Tortuga",      displayName = "Tortuga",      questId = "Q5", role = NPCRole.LostPet, companionType = CompanionAI.CompanionType.Mounted,       modelPath = TortoiseModelPath,                height = 0.40f, offsetFromPlayer = new Vector3(16f, 0f, 6f) },
         };
@@ -60,13 +60,13 @@ namespace Replica.EditorTools
             new NpcDef { objectName = "Madre",        displayName = "Madre",        questId = "Q1", role = NPCRole.Owner, modelPath = HumanModelPath, height = 2.1f, offsetFromPlayer = new Vector3(6f, 0f, 4f) },
             new NpcDef { objectName = "Anciana",      displayName = "Anciana",      questId = "Q2", role = NPCRole.Owner, modelPath = HumanModelPath, height = 2.0f, offsetFromPlayer = new Vector3(-6f, 0f, 4f) },
             new NpcDef { objectName = "Humano Ciego", displayName = "Humano Ciego", questId = "Q3", role = NPCRole.Owner, modelPath = HumanModelPath, height = 2.2f, offsetFromPlayer = new Vector3(0f, 0f, 8f) },
-            new NpcDef { objectName = "Dueño Cuervo", displayName = "Due�o",        questId = "Q4", role = NPCRole.Owner, modelPath = HumanModelPath, height = 2.2f, offsetFromPlayer = new Vector3(8f, 0f, -4f) },
+            new NpcDef { objectName = "DueÃ±o Cuervo", displayName = "Dueño",        questId = "Q4", role = NPCRole.Owner, modelPath = HumanModelPath, height = 2.2f, offsetFromPlayer = new Vector3(8f, 0f, -4f) },
             new NpcDef { objectName = "Mujer",        displayName = "Mujer",        questId = "Q5", role = NPCRole.Owner, modelPath = HumanModelPath, height = 2.1f, offsetFromPlayer = new Vector3(-8f, 0f, -4f) },
         };
 
-        // ───────────────────────────── MENÚS ─────────────────────────────
+        // âââââââââââââââââââââââââââââ MENÃS âââââââââââââââââââââââââââââ
 
-        [MenuItem("Tools/Réplica/Configuración Automática de Escena", false, 0)]
+        [MenuItem("Tools/RÃ©plica/ConfiguraciÃ³n AutomÃ¡tica de Escena", false, 0)]
         public static void SetupScene()
         {
             if (!EnsureTMPEssentials()) return;
@@ -75,10 +75,10 @@ namespace Replica.EditorTools
             QuestDataGenerator.GenerateDefaultQuests();
             var quests = LoadQuests();
 
-            // 3a. Colliders del entorno (los assets de la ciudad no traen colliders: sin esto el perro cae al vacío)
+            // 3a. Colliders del entorno (los assets de la ciudad no traen colliders: sin esto el perro cae al vacÃ­o)
             int colliders = AddEnvironmentCollidersInternal();
 
-            // 2. Jugador + cámara
+            // 2. Jugador + cÃ¡mara
             GameObject player = SetupPlayer();
             Camera cam = SetupCamera(player);
             var pcSo = new SerializedObject(player.GetComponent<PlayerController>());
@@ -111,23 +111,23 @@ namespace Replica.EditorTools
             Selection.activeGameObject = player;
             if (SceneView.lastActiveSceneView != null) SceneView.lastActiveSceneView.FrameSelected();
 
-            EditorUtility.DisplayDialog("Réplica - Escena configurada",
-                $"Listo. Se agregaron {colliders} colliders al entorno y se está horneando el NavMesh.\n\n" +
+            EditorUtility.DisplayDialog("RÃ©plica - Escena configurada",
+                $"Listo. Se agregaron {colliders} colliders al entorno y se estÃ¡ horneando el NavMesh.\n\n" +
                 "1. Guarda la escena (Ctrl+S).\n" +
                 "2. Presiona Play.\n\n" +
-                "Controles:\n• WASD / Flechas: mover\n• Shift: correr\n• Mouse: girar cámara (Esc libera el cursor)\n• Rueda: zoom\n• E: hablar / continuar diálogo\n\n" +
-                "Al iniciar aparece el prólogo: presiona E para avanzarlo (mientras hay diálogo el perro no se mueve).\n\n" +
-                "Mueve los NPCs a donde quieras en el mapa y vuelve a usar Tools > Réplica > Hornear NavMesh.",
+                "Controles:\nâ¢ WASD / Flechas: mover\nâ¢ Shift: correr\nâ¢ Mouse: girar cÃ¡mara (Esc libera el cursor)\nâ¢ Rueda: zoom\nâ¢ E: hablar / continuar diÃ¡logo\n\n" +
+                "Al iniciar aparece el prÃ³logo: presiona E para avanzarlo (mientras hay diÃ¡logo el perro no se mueve).\n\n" +
+                "Mueve los NPCs a donde quieras en el mapa y vuelve a usar Tools > RÃ©plica > Hornear NavMesh.",
                 "OK");
         }
 
-        [MenuItem("Tools/Réplica/Hornear NavMesh (Bake)", false, 20)]
+        [MenuItem("Tools/RÃ©plica/Hornear NavMesh (Bake)", false, 20)]
         public static void BakeNavMesh()
         {
             BakeNavMeshInternal(true);
         }
 
-        [MenuItem("Tools/Réplica/Agregar Colliders al Entorno", false, 21)]
+        [MenuItem("Tools/RÃ©plica/Agregar Colliders al Entorno", false, 21)]
         public static void AddEnvironmentColliders()
         {
             int count = AddEnvironmentCollidersInternal();
@@ -135,20 +135,20 @@ namespace Replica.EditorTools
             Debug.Log($"[AutoSceneBuilder] Se agregaron {count} MeshColliders al entorno.");
         }
 
-        // ───────────────────────────── TMP ─────────────────────────────
+        // âââââââââââââââââââââââââââââ TMP âââââââââââââââââââââââââââââ
 
         private static bool EnsureTMPEssentials()
         {
             if (AssetDatabase.FindAssets("t:TMP_Settings").Length > 0) return true;
 
             TMP_PackageResourceImporter.ImportResources(true, false, false);
-            EditorUtility.DisplayDialog("Réplica",
-                "Se están importando los recursos esenciales de TextMesh Pro (necesarios para los textos de diálogo y HUD).\n\n" +
-                "Cuando termine la importación, vuelve a ejecutar:\nTools > Réplica > Configuración Automática de Escena", "OK");
+            EditorUtility.DisplayDialog("RÃ©plica",
+                "Se estÃ¡n importando los recursos esenciales de TextMesh Pro (necesarios para los textos de diÃ¡logo y HUD).\n\n" +
+                "Cuando termine la importaciÃ³n, vuelve a ejecutar:\nTools > RÃ©plica > ConfiguraciÃ³n AutomÃ¡tica de Escena", "OK");
             return false;
         }
 
-        // ───────────────────────────── MISIONES ─────────────────────────────
+        // âââââââââââââââââââââââââââââ MISIONES âââââââââââââââââââââââââââââ
 
         private static Dictionary<string, QuestData> LoadQuests()
         {
@@ -162,7 +162,7 @@ namespace Replica.EditorTools
             return result;
         }
 
-        // ───────────────────────────── JUGADOR ─────────────────────────────
+        // âââââââââââââââââââââââââââââ JUGADOR âââââââââââââââââââââââââââââ
 
         private static GameObject SetupPlayer()
         {
@@ -173,7 +173,7 @@ namespace Replica.EditorTools
 
             player.tag = "Player";
 
-            // Colocar sobre el suelo, donde estás mirando en la Scene View
+            // Colocar sobre el suelo, donde estÃ¡s mirando en la Scene View
             if (created || player.transform.position == Vector3.zero)
             {
                 Vector3 focus = SceneView.lastActiveSceneView != null ? SceneView.lastActiveSceneView.pivot : Vector3.zero;
@@ -184,7 +184,7 @@ namespace Replica.EditorTools
             // Modelo del perro (corgi del kit de perros animados)
             GameObject model = EnsureModel(player, PlayerModelPath, 1.0f);
 
-            // CharacterController (según la guía)
+            // CharacterController (segÃºn la guÃ­a)
             var cc = player.GetComponent<CharacterController>();
             if (cc == null) cc = player.AddComponent<CharacterController>();
             cc.height = 1.0f;
@@ -196,7 +196,7 @@ namespace Replica.EditorTools
             cc.minMoveDistance = 0f;
 
             // Puntos de montura
-            Transform mountBack = EnsureChild(player.transform, "Mount_Back", new Vector3(0f, 0.55f, 0.25f));
+            Transform mountBack = EnsureChild(player.transform, "Mount_Back", new Vector3(0f, 0.45f, 0.05f));
             Transform mountHead = EnsureChild(player.transform, "Mount_Head", new Vector3(0f, 0.8f, 0.4f));
 
             var pc = player.GetComponent<PlayerController>();
@@ -211,7 +211,7 @@ namespace Replica.EditorTools
             if (anim != null) so.FindProperty("animator").objectReferenceValue = anim;
             so.ApplyModifiedProperties();
 
-            // Interacción
+            // InteracciÃ³n
             var im = player.GetComponent<InteractionManager>();
             if (im == null) im = player.AddComponent<InteractionManager>();
             var imSo = new SerializedObject(im);
@@ -229,7 +229,7 @@ namespace Replica.EditorTools
             return player;
         }
 
-        // ───────────────────────────── CÁMARA ─────────────────────────────
+        // âââââââââââââââââââââââââââââ CÃMARA âââââââââââââââââââââââââââââ
 
         private static Camera SetupCamera(GameObject player)
         {
@@ -260,21 +260,21 @@ namespace Replica.EditorTools
                 }
             }
 
-            // Desactivar otros scripts de cámara (ej. cámaras libres de las escenas demo) que pelearían con el seguimiento
+            // Desactivar otros scripts de cÃ¡mara (ej. cÃ¡maras libres de las escenas demo) que pelearÃ­an con el seguimiento
             foreach (var mb in cam.GetComponents<MonoBehaviour>())
             {
                 if (mb == null || mb is ThirdPersonCamera) continue;
                 string ns = mb.GetType().Namespace ?? string.Empty;
                 if (ns.StartsWith("UnityEngine") || ns.StartsWith("Unity.")) continue;
                 mb.enabled = false;
-                Debug.Log($"[AutoSceneBuilder] Se desactivó el script '{mb.GetType().Name}' de la cámara para que no interfiera con ThirdPersonCamera.");
+                Debug.Log($"[AutoSceneBuilder] Se desactivÃ³ el script '{mb.GetType().Name}' de la cÃ¡mara para que no interfiera con ThirdPersonCamera.");
             }
 
             var tpc = cam.GetComponent<ThirdPersonCamera>();
             if (tpc == null) tpc = cam.gameObject.AddComponent<ThirdPersonCamera>();
             tpc.target = player.transform;
 
-            // Posición inicial detrás del perro
+            // PosiciÃ³n inicial detrÃ¡s del perro
             Transform p = player.transform;
             cam.transform.position = p.position - p.forward * 4f + Vector3.up * 2f;
             cam.transform.LookAt(p.position + Vector3.up * 0.6f);
@@ -283,7 +283,7 @@ namespace Replica.EditorTools
             return cam;
         }
 
-        // ───────────────────────────── NPCs ─────────────────────────────
+        // âââââââââââââââââââââââââââââ NPCs âââââââââââââââââââââââââââââ
 
         private static GameObject SetupNpc(NpcDef def, Transform player, Dictionary<string, QuestData> quests,
             CompanionAI linkedCompanion, out CompanionAI companion)
@@ -326,12 +326,20 @@ namespace Replica.EditorTools
                 if (companion == null) companion = npc.AddComponent<CompanionAI>();
                 var aiSo = new SerializedObject(companion);
                 aiSo.FindProperty("companionType").enumValueIndex = (int)def.companionType;
+                if (def.companionType == CompanionAI.CompanionType.Mounted)
+                {
+                    aiSo.FindProperty("mountedOffset").vector3Value = new Vector3(0f, 0.5f, 0f);
+                    aiSo.FindProperty("mountedRotationOffset").vector3Value = new Vector3(-10f, 0f, 0f);
+                }
                 aiSo.ApplyModifiedProperties();
             }
             else
             {
                 EnsureIgnoredByNavMesh(npc);
             }
+
+            // Configurar atuendos acordes al personaje si es humano de Creative_Characters
+            ConfigureHumanParts(npc, def.objectName);
 
             var interactable = npc.GetComponent<InteractableNPC>();
             if (interactable == null) interactable = npc.AddComponent<InteractableNPC>();
@@ -355,7 +363,7 @@ namespace Replica.EditorTools
             return npc;
         }
 
-        // ───────────────────────────── UI ─────────────────────────────
+        // âââââââââââââââââââââââââââââ UI âââââââââââââââââââââââââââââ
 
         private static void SetupUI()
         {
@@ -375,7 +383,7 @@ namespace Replica.EditorTools
 
             if (canvasGo.GetComponent<Replica.UI.UniversalMarkers>() == null) canvasGo.AddComponent<Replica.UI.UniversalMarkers>();
 
-            // ── Diálogo ──
+            // ââ DiÃ¡logo ââ
             RectTransform dmRect = GetOrCreateRect("DialogueManager", canvasGo.transform);
             Stretch(dmRect, Vector2.zero, Vector2.one);
             var ds = dmRect.GetComponent<DialogueSystem>();
@@ -389,7 +397,7 @@ namespace Replica.EditorTools
 
             var speaker = GetOrCreateText("SpeakerName", panel, "Narrador", 34, TextAlignmentOptions.TopLeft, new Color(1f, 0.85f, 0.4f), FontStyles.Bold);
             Stretch(speaker.rectTransform, new Vector2(0.03f, 0.70f), new Vector2(0.97f, 0.95f));
-            var content = GetOrCreateText("DialogueText", panel, "Texto del diálogo...", 30, TextAlignmentOptions.TopLeft, Color.white, FontStyles.Normal);
+            var content = GetOrCreateText("DialogueText", panel, "Texto del diÃ¡logo...", 30, TextAlignmentOptions.TopLeft, Color.white, FontStyles.Normal);
             Stretch(content.rectTransform, new Vector2(0.03f, 0.15f), new Vector2(0.97f, 0.70f));
             var cont = GetOrCreateText("ContinueIndicator", panel, "[E] Continuar", 22, TextAlignmentOptions.BottomRight, new Color(1f, 1f, 1f, 0.8f), FontStyles.Italic);
             Stretch(cont.rectTransform, new Vector2(0.70f, 0.03f), new Vector2(0.98f, 0.18f));
@@ -403,7 +411,7 @@ namespace Replica.EditorTools
             dsSo.ApplyModifiedProperties();
             panel.gameObject.SetActive(false);
 
-            // ── HUD ──
+            // ââ HUD ââ
             RectTransform hudRect = GetOrCreateRect("HUD", canvasGo.transform);
             Stretch(hudRect, Vector2.zero, Vector2.one);
             var hud = GetOrAdd<GameHUD>(hudRect.gameObject);
@@ -411,7 +419,7 @@ namespace Replica.EditorTools
             var counter = GetOrCreateText("QuestCounter", hudRect, "Rescates: 0 / 5", 32, TextAlignmentOptions.TopLeft, Color.white, FontStyles.Bold);
             Stretch(counter.rectTransform, new Vector2(0.02f, 0.90f), new Vector2(0.40f, 0.98f));
 
-            var controls = GetOrCreateText("ControlsHint", hudRect, "WASD: mover  |  Shift: correr  |  Mouse: cámara  |  E: hablar", 18, TextAlignmentOptions.TopRight, new Color(1f, 1f, 1f, 0.7f), FontStyles.Normal);
+            var controls = GetOrCreateText("ControlsHint", hudRect, "WASD: mover  |  Shift: correr  |  Mouse: cÃ¡mara  |  E: hablar", 18, TextAlignmentOptions.TopRight, new Color(1f, 1f, 1f, 0.7f), FontStyles.Normal);
             Stretch(controls.rectTransform, new Vector2(0.55f, 0.94f), new Vector2(0.98f, 0.99f));
 
             RectTransform promptPanel = GetOrCreateRect("InteractionPromptPanel", hudRect);
@@ -432,7 +440,7 @@ namespace Replica.EditorTools
             EditorUtility.SetDirty(canvasGo);
         }
 
-        // ───────────────────────────── GESTORES ─────────────────────────────
+        // âââââââââââââââââââââââââââââ GESTORES âââââââââââââââââââââââââââââ
 
         private static void SetupManagers(Dictionary<string, QuestData> quests, Camera gameplayCam)
         {
@@ -441,7 +449,7 @@ namespace Replica.EditorTools
             if (finalGo == null) finalGo = new GameObject("FinalSequenceManager");
             var fsc = GetOrAdd<FinalSequenceController>(finalGo);
 
-            // Cámara cinemática (desactivada hasta la secuencia final)
+            // CÃ¡mara cinemÃ¡tica (desactivada hasta la secuencia final)
             Transform cineT = finalGo.transform.Find("CinematicCamera");
             GameObject cine;
             if (cineT == null)
@@ -470,12 +478,12 @@ namespace Replica.EditorTools
                 RectTransform bg = GetOrCreateRect("Background", endGo.transform);
                 Stretch(bg, Vector2.zero, Vector2.one);
                 GetOrAdd<Image>(bg.gameObject).color = Color.black;
-                var title = GetOrCreateText("Title", bg, "Réplica\n\nGracias por jugar", 64, TextAlignmentOptions.Center, Color.white, FontStyles.Bold);
+                var title = GetOrCreateText("Title", bg, "RÃ©plica\n\nGracias por jugar", 64, TextAlignmentOptions.Center, Color.white, FontStyles.Bold);
                 Stretch(title.rectTransform, Vector2.zero, Vector2.one);
             }
             endGo.SetActive(false);
 
-            // GameManager + QuestManager
+            // GameManager + QuestManager + BackgroundMusic
             GameObject gm = GameObject.Find("GameManager");
             if (gm == null) gm = new GameObject("GameManager");
             var qm = GetOrAdd<QuestManager>(gm);
@@ -488,9 +496,25 @@ namespace Replica.EditorTools
                 list.GetArrayElementAtIndex(i).objectReferenceValue = quests.TryGetValue(ids[i], out var q) ? q : null;
             qmSo.FindProperty("finalSequenceController").objectReferenceValue = fsc;
             qmSo.ApplyModifiedProperties();
+
+            var bgm = GetOrAdd<Replica.Audio.BackgroundMusic>(gm);
+            var bgmSo = new SerializedObject(bgm);
+            var bgmClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/loopcinematico.mp3");
+            if (bgmClip != null) bgmSo.FindProperty("backgroundTrack").objectReferenceValue = bgmClip;
+            bgmSo.FindProperty("volume").floatValue = 0.1f;
+            bgmSo.FindProperty("loop").boolValue = true;
+            bgmSo.ApplyModifiedProperties();
+
+            // Configurar cámaras en FinalSequenceController
+            var fscSo = new SerializedObject(fsc);
+            fscSo.FindProperty("gameplayCamera").objectReferenceValue = gameplayCam;
+            fscSo.FindProperty("cameraTobyWithOwner").objectReferenceValue = cine.GetComponent<Camera>();
+            fscSo.FindProperty("cameraCrowFlyingAway").objectReferenceValue = cine.GetComponent<Camera>();
+            fscSo.FindProperty("endScreenCanvas").objectReferenceValue = endGo;
+            fscSo.ApplyModifiedProperties();
         }
 
-        // ───────────────────────────── NAVMESH ─────────────────────────────
+        // âââââââââââââââââââââââââââââ NAVMESH âââââââââââââââââââââââââââââ
 
         private static void BakeNavMeshInternal(bool silent)
         {
@@ -516,7 +540,7 @@ namespace Replica.EditorTools
             mod.applyToChildren = true;
         }
 
-        // ───────────────────────────── COLLIDERS DEL ENTORNO ─────────────────────────────
+        // âââââââââââââââââââââââââââââ COLLIDERS DEL ENTORNO âââââââââââââââââââââââââââââ
 
         private static int AddEnvironmentCollidersInternal()
         {
@@ -548,7 +572,7 @@ namespace Replica.EditorTools
                 || t.GetComponentInParent<Animator>(true) != null;
         }
 
-        // ───────────────────────────── UTILIDADES ─────────────────────────────
+        // âââââââââââââââââââââââââââââ UTILIDADES âââââââââââââââââââââââââââââ
 
         private static bool TryGroundPoint(Vector3 around, float startHeight, out Vector3 point)
         {
@@ -575,7 +599,7 @@ namespace Replica.EditorTools
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
             if (prefab == null)
             {
-                Debug.LogWarning($"[AutoSceneBuilder] No se encontró el modelo '{prefabPath}' para '{root.name}'. Arrastra un modelo como hijo manualmente.");
+                Debug.LogWarning($"[AutoSceneBuilder] No se encontrÃ³ el modelo '{prefabPath}' para '{root.name}'. Arrastra un modelo como hijo manualmente.");
                 return null;
             }
 
@@ -586,7 +610,7 @@ namespace Replica.EditorTools
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
 
-            // Quitar scripts/física del modelo para que no interfieran con nuestros componentes
+            // Quitar scripts/fÃ­sica del modelo para que no interfieran con nuestros componentes
             foreach (var mb in model.GetComponentsInChildren<MonoBehaviour>(true)) Object.DestroyImmediate(mb);
             foreach (var rb in model.GetComponentsInChildren<Rigidbody>(true)) Object.DestroyImmediate(rb);
             foreach (var col in model.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(col);
@@ -603,7 +627,69 @@ namespace Replica.EditorTools
             }
 
             NormalizeHeight(root.transform, model, targetHeight);
+
             return model;
+        }
+
+        private static void ConfigureHumanParts(GameObject npc, string characterName)
+        {
+            Transform baseMesh = npc.transform.Find("Model/Base_Mesh");
+            if (baseMesh == null)
+            {
+                var allT = npc.GetComponentsInChildren<Transform>(true);
+                foreach (var t in allT)
+                {
+                    if (t.name == "Base_Mesh") { baseMesh = t; break; }
+                }
+            }
+            if (baseMesh == null) return;
+
+            // Conjuntos de partes por rol/questline
+            bool showAccessories = false;
+            bool showGlasses = false;
+            bool showHat = false;
+            bool showMustache = false;
+            bool showOuterwear = true;
+            bool showTShirt = false;
+
+            if (characterName.Contains("Anciana") || characterName.Contains("Ciego"))
+            {
+                showGlasses = true;
+            }
+            else if (characterName.Contains("Cuervo"))
+            {
+                showHat = true;
+                showMustache = true;
+            }
+            else if (characterName.Contains("Mujer"))
+            {
+                showAccessories = true;
+            }
+            else if (characterName.Contains("Niño") || characterName.Contains("Nino"))
+            {
+                showHat = true;
+                showTShirt = true;
+                showOuterwear = false;
+            }
+
+            foreach (Transform child in baseMesh)
+            {
+                string n = child.name;
+                if (n == "Skeleton" || n == "Body" || n == "Faces" || n == "Pants" || n == "Shoes" || n == "Hairstyle")
+                {
+                    child.gameObject.SetActive(true);
+                }
+                else if (n == "Full_body" || n == "Gloves")
+                {
+                    child.gameObject.SetActive(false);
+                }
+                else if (n == "Accessories") child.gameObject.SetActive(showAccessories);
+                else if (n == "Glasses") child.gameObject.SetActive(showGlasses);
+                else if (n == "Hat") child.gameObject.SetActive(showHat);
+                else if (n == "Mustache") child.gameObject.SetActive(showMustache);
+                else if (n == "Outerwear") child.gameObject.SetActive(showOuterwear);
+                else if (n == "T_Shirt") child.gameObject.SetActive(showTShirt);
+            }
         }
 
         private static void NormalizeHeight(Transform root, GameObject model, float targetHeight)

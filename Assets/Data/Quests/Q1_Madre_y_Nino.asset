@@ -17,25 +17,25 @@ MonoBehaviour:
   ownerInitialDialogue:
     speakerName: Madre
     lines:
-    - text: Mi nino justo estaba saliendo de clase pero aun no llega.
-      voiceOrSfx: {fileID: 0}
-    - text: Me ayudas a buscarlo? (Presiona [E] para Aceptar Mision)
-      voiceOrSfx: {fileID: 0}
+    - text: "El hijo mio esta saliendo de clase..."
+      voiceOrSfx: {fileID: 8300000, guid: 8ea6691275a69b776b4831ae12d908d8, type: 3}
+    - text: "Pero aun no llega"
+      voiceOrSfx: {fileID: 8300000, guid: 35763df1c2d5483ae9d42c5d21ba22c5, type: 3}
   petFoundDialogue:
-    speakerName: Nino
+    speakerName: Niño
     lines:
-    - text: Nos dijeron que esperemos a que nos vengan a buscar. Voy contigo?
-      voiceOrSfx: {fileID: 0}
+    - text: "Nos dijeron que esperaramos a que nos vengan a buscar. Voy contigo?"
+      voiceOrSfx: {fileID: 8300000, guid: 6e136a27d789aa43494108dda73fdd7e, type: 3}
   ownerDeliveredDialogue:
     speakerName: Madre
     lines:
-    - text: Gracias perrito por traer a mi hijo.
-      voiceOrSfx: {fileID: 0}
+    - text: "Gracias perrito!"
+      voiceOrSfx: {fileID: 8300000, guid: bf80a3800fdf691e18fdfc3e5e8d339f, type: 3}
   petDeliveredDialogue:
-    speakerName: Nino
+    speakerName: Niño
     lines:
-    - text: Mami!
-      voiceOrSfx: {fileID: 0}
+    - text: "¡Gracias perrito!"
+      voiceOrSfx: {fileID: 8300000, guid: a36bf48d22df3a955b1eece9543bdf7d, type: 3}
   onQuestStarted:
     m_PersistentCalls:
       m_Calls: []

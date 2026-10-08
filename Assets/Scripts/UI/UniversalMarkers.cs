@@ -89,6 +89,40 @@ namespace Replica.UI {
                     marker.rt.rotation = Quaternion.Euler(0, 0, 45);
                 }
             }
+
+            UpdateFinalObjectives();
+        }
+
+        private readonly System.Collections.Generic.Dictionary<FinalObjectiveNPC, MarkerInstance> finalMarkers = new System.Collections.Generic.Dictionary<FinalObjectiveNPC, MarkerInstance>();
+
+        private void UpdateFinalObjectives() {
+            var finalObjs = FindObjectsByType<FinalObjectiveNPC>(FindObjectsInactive.Exclude);
+            foreach (var fo in finalObjs) {
+                if (fo == null || !fo.CanInteract()) {
+                    if (finalMarkers.ContainsKey(fo)) {
+                        finalMarkers[fo].go.SetActive(false);
+                    }
+                    continue;
+                }
+
+                if (!finalMarkers.ContainsKey(fo)) {
+                    var go = Instantiate(markerPrefab, transform);
+                    var inst = new MarkerInstance { go = go, rt = go.GetComponent<RectTransform>(), img = go.GetComponent<Image>() };
+                    inst.rt.sizeDelta = new Vector2(40, 40);
+                    finalMarkers[fo] = inst;
+                }
+
+                var marker = finalMarkers[fo];
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(fo.transform.position + Vector3.up * 2f);
+                if (screenPos.z < 0) {
+                    marker.go.SetActive(false);
+                } else {
+                    marker.go.SetActive(true);
+                    marker.img.color = unacceptedColor;
+                    marker.rt.position = new Vector3(screenPos.x, screenPos.y, 0);
+                    marker.rt.rotation = Quaternion.Euler(0, 0, 45);
+                }
+            }
         }
     }
 }

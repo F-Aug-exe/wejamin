@@ -67,7 +67,7 @@ namespace Replica.Interaction
             if (role == NPCRole.Owner)
                 return state == QuestState.NotStarted || state == QuestState.CompanionRecruited || state == QuestState.Completed;
             else
-                return state == QuestState.InProgress || state == QuestState.CompanionRecruited;
+                return state == QuestState.InProgress;
         }
 
         public void Interact(GameObject interactor)
