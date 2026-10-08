@@ -1,4 +1,5 @@
 using UnityEngine;
+using Replica.Utils;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -48,8 +49,9 @@ namespace Replica.Player
                 canMove = value;
                 if (!canMove && animator != null)
                 {
-                    animator.SetFloat("Speed", 0f);
-                    animator.SetBool("IsRunning", false);
+                    animator.TrySetFloat("Speed", 0f);
+                    animator.TrySetBool("IsRunning", false);
+                    animator.TrySetInteger(DogAnimationIds.ParameterName, DogAnimationIds.Idle);
                 }
             }
         }
@@ -153,10 +155,15 @@ namespace Replica.Player
         {
             if (animator == null) return;
 
+            bool moving = inputMagnitude > 0.1f;
             float speedValue = running ? (inputMagnitude * 2f) : inputMagnitude;
-            animator.SetFloat("Speed", speedValue);
-            animator.SetBool("IsRunning", running && inputMagnitude > 0.1f);
-            animator.SetBool("IsGrounded", characterController.isGrounded);
+            animator.TrySetFloat("Speed", speedValue);
+            animator.TrySetBool("IsRunning", running && moving);
+            animator.TrySetBool("IsGrounded", characterController.isGrounded);
+
+            // Kit "3D Stylized Animated Dogs": usa un entero AnimationID
+            int animationId = !moving ? DogAnimationIds.Idle : (running ? DogAnimationIds.Run : DogAnimationIds.Walk);
+            animator.TrySetInteger(DogAnimationIds.ParameterName, animationId);
         }
     }
 }

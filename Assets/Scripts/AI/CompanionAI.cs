@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Replica.Utils;
 
 namespace Replica.AI
 {
@@ -187,8 +188,11 @@ namespace Replica.AI
             float currentSpeed = agent.velocity.magnitude;
             if (animator != null)
             {
-                animator.SetFloat("Speed", currentSpeed);
-                animator.SetBool("IsMoving", currentSpeed > 0.1f);
+                animator.TrySetFloat("Speed", currentSpeed);
+                animator.TrySetBool("IsMoving", currentSpeed > 0.1f);
+                int animationId = currentSpeed < 0.1f ? DogAnimationIds.Idle
+                    : (currentSpeed > 4.5f ? DogAnimationIds.Run : DogAnimationIds.Walk);
+                animator.TrySetInteger(DogAnimationIds.ParameterName, animationId);
             }
         }
 
@@ -205,7 +209,7 @@ namespace Replica.AI
 
             if (animator != null)
             {
-                animator.SetBool("IsMounted", true);
+                animator.TrySetBool("IsMounted", true);
             }
         }
 
@@ -226,7 +230,8 @@ namespace Replica.AI
 
             if (animator != null)
             {
-                animator.SetBool("IsFlying", true);
+                animator.TrySetBool("IsFlying", true);
+                animator.TrySetBool("flying", true); // controlador de "living birds"
             }
         }
 
@@ -234,8 +239,9 @@ namespace Replica.AI
         {
             if (animator != null)
             {
-                animator.SetFloat("Speed", 0f);
-                animator.SetBool("IsMoving", false);
+                animator.TrySetFloat("Speed", 0f);
+                animator.TrySetBool("IsMoving", false);
+                animator.TrySetInteger(DogAnimationIds.ParameterName, DogAnimationIds.Idle);
             }
         }
     }
