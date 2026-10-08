@@ -1,0 +1,38 @@
+gracias amigo
+
+
+Actúa como un Programador Senior de Unity (C#) experto en arquitectura de juegos 3D. Tu tarea es generar todos los scripts base para un juego de exploración y rescate en tercera persona llamado "Réplica". Tienes permiso para crear los scripts en la carpeta Assets/Scripts/.
+
+Contexto del Juego:
+El jugador controla a un perro tras un terremoto en una ciudad. Debe explorar, interactuar con NPCs humanos y animales, reclutar personajes perdidos (que lo seguirán) y llevarlos con sus dueños. Al completar 5 misiones, se activa el final.
+Nota sobre assets: El modelo del "Niño" del guion original se reemplazó por un "Cachorro" (perro pequeño) por limitaciones de assets.
+
+Sistemas que debes programar:
+
+PlayerController.cs: Movimiento 3D fluido en tercera persona usando el nuevo Input System o Input.GetAxis, con soporte para gravedad, rotación suave hacia la dirección de movimiento y conexión con un Animator (variables de velocidad para caminar/correr).
+
+InteractionManager.cs e IInteractable.cs: Un sistema de interacción. El jugador debe tener un trigger para detectar NPCs cercanos que implementen la interfaz IInteractable. Al presionar una tecla (ej. 'E'), se activa el diálogo o la acción.
+
+DialogueSystem.cs: Un Singleton básico que reciba un array de strings y los muestre en un Canvas de UI. Debe permitir avanzar el texto con una tecla y disparar un evento de Unity (UnityEvent) al terminar de hablar.
+
+CompanionAI.cs: Un script usando UnityEngine.AI.NavMeshAgent. Los NPCs rescatados (el Cachorro, Cachetoncito, la Tortuga, el Perro Guía, el Cuervo) se añadirán al jugador como escoltas. Deben seguir al jugador a una distancia prudente y detenerse cuando el jugador se detenga. Para la tortuga (Q5) y el cuervo (Q4), incluye un booleano isMounted o isFlying para que en lugar de usar NavMesh, simplemente sigan el Transform del jugador (espalda o encima de la cabeza).
+
+QuestManager.cs: Un Singleton que gestione el progreso del juego. Debe registrar el estado de 5 misiones principales y activar la Secuencia Final (Q6) cuando las 5 estén completadas.
+
+Guion y Flujo de Misiones (Para implementar como lógica o ScriptableObjects):
+
+Intro: "Q0.1: Un día un perrito paseaba con su humano, cuando fueron interrumpidos por un temblor..."
+
+Q1 (Madre y Cachorro): Madre: "El cachorro mío justo ta saliendo de clase pero aún no llega." -> Encuentras al Cachorro: "Nos dijeron que esperemos a que nos vengan a buscar. ¿Voy contigo?" -> Entregas: "Gracias perrito."
+
+Q2 (Anciana y Cachetoncito): Anciana: "Mi cachetoncitoo, ¿viste a mi cachetoncitoo?" -> Cachetoncito: "Uy loco mirá que está vieja se asustó y yo me abrí, yo me parcho con usted." -> Entregas: Anciana dice "¡Cachetoncitoo!" y el perro grita "¡Noooooo!".
+
+Q3 (Ciego y Perro de Asistencia): Humano: "Mi perro de asistencia, debe haberse asustado..." -> Perro Guía: "Oye, ¿viste a un humano ciego? Se me perdió..." -> Entregas: Perro huele ("Sniff-") y corre hacia él.
+
+Q4 (Cachorro y Cuervo): Cachorro: "¿Vieron un cuervo que habla mucho?" -> Cuervo: "Hola canino, se me perdió un humano..." -> Entregas: "¡Chico! Te me habías perdido."
+
+Q5 (Mujer y Tortuga): Mujer: "Saqué a pasear a mi tortuga y ya no la veo..." -> Tortuga (volteada): "Amigo, esa vieja me pateó y quedé así. ¿Me puedes llevar en tu lomo?" -> Entregas: Tortuga dice "Tetranutria..." y mujer dice "Mira dónde estabas."
+
+Q6 (Final): El cuervo avisa (Q6F1), el jugador sigue al cuervo. Ocurre una réplica falsa (Q6F3: "¿Qué? Ese no es mi perro."). Luego el verdadero dueño lo encuentra en un salto congelado (Q6F4). El cuervo narra el final (Q6F5).
+
+Escribe los scripts organizados, listos para que yo solo asigne los modelos 3D, configure el NavMesh, asigne los audios en los UnityEvents y posicione las cámaras de las cinemáticas en la escena. Utiliza comentarios en español para indicar dónde debo arrastrar cada componente en el Inspector.
