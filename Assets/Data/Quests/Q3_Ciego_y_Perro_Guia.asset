@@ -10,30 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2582871bfc7baf808b7eff7d178be239, type: 3}
-  m_Name: Q1_Madre_y_Cachorro
+  m_Name: Q3_Ciego_y_Perro_Guia
   m_EditorClassIdentifier: Assembly-CSharp::Replica.Quests.QuestData
-  questId: Q1
-  questTitle: Madre y Cachorro
+  questId: Q3
+  questTitle: Ciego y Perro Guia
   ownerInitialDialogue:
-    speakerName: Madre
+    speakerName: Humano Ciego
     lines:
-    - "El cachorro m\xEDo justo ta saliendo de clase pero a\xFAn no llega."
-    voiceOrSfx: {fileID: 0}
+    - text: Mi perro de asistencia, debe haberse asustado con el temblor...
+      voiceOrSfx: {fileID: 0}
+    - text: Me ayudas a buscarlo? (Presiona [E] para Aceptar Mision)
+      voiceOrSfx: {fileID: 0}
   petFoundDialogue:
-    speakerName: Cachorro
+    speakerName: Perro Gua
     lines:
-    - "Nos dijeron que esperemos a que nos vengan a buscar. \xBFVoy contigo?"
-    voiceOrSfx: {fileID: 0}
+    - text: Oye, viste a un humano ciego? Se me perdio...
+      voiceOrSfx: {fileID: 0}
   ownerDeliveredDialogue:
-    speakerName: Madre
+    speakerName: Humano Ciego
     lines:
-    - Gracias perrito.
-    voiceOrSfx: {fileID: 0}
+    - text: Amigo mo, estas aqu! Gracias, perrito.
+      voiceOrSfx: {fileID: 0}
   petDeliveredDialogue:
-    speakerName: Cachorro
+    speakerName: Perro Gua
     lines:
-    - "\xA1Mami!"
-    voiceOrSfx: {fileID: 0}
+    - text: Sniff- Guau!
+      voiceOrSfx: {fileID: 0}
   onQuestStarted:
     m_PersistentCalls:
       m_Calls: []

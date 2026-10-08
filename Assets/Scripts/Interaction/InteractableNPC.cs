@@ -8,48 +8,40 @@ namespace Replica.Interaction
 {
     public enum NPCRole
     {
-        Owner,   // Dueño que pide ayuda y recibe la mascota
-        LostPet  // Mascota perdida que acompaña al jugador al ser encontrada
+        Owner,
+        LostPet
     }
 
-    /// <summary>
-    /// Componente de interacción para NPCs (Humanos dueños y Mascotas perdidas).
-    /// Arrastra este script a cada NPC de la escena y asigna sus datos de misión en el Inspector.
-    /// </summary>
     public class InteractableNPC : MonoBehaviour, IInteractable
     {
-        [Header("Rol y Configuración de Misión")]
-        [Tooltip("Rol del NPC en la misión")]
+        [Header("Rol y Configuracion de Mision")]
+        [Tooltip("Rol del NPC en la mision")]
         [SerializeField] private NPCRole role = NPCRole.Owner;
-        [Tooltip("Identificador de la misión asociada (ej. Q1, Q2, Q3, Q4, Q5)")]
+        [Tooltip("Identificador de la mision asociada (ej. Q1, Q2, Q3, Q4, Q5)")]
         [SerializeField] private string questId = "Q1";
-        [Tooltip("ScriptableObject de la misión (opcional, si se asigna toma los diálogos de aquí)")]
+
+        public NPCRole Role => role;
+        public string QuestId => questId;
+
+        [Header("Referencias")]
+        [Tooltip("ScriptableObject de la mision (opcional, si se asigna toma los dialogos de aqu)")]
         [SerializeField] private QuestData questData;
+        [Tooltip("Nombre a mostrar si no hay datos de mision")]
+        [SerializeField] private string npcDisplayName = "Humano";
 
-        [Header("Textos de Interacción")]
-        [Tooltip("Nombre a mostrar en el prompt")]
-        [SerializeField] private string npcDisplayName = "NPC";
-
-        [Header("Referencias de Acompañante")]
-        [Tooltip("Componente CompanionAI de la mascota")]
+        [Header("Conexion y Entrega")]
+        [Tooltip("Acompanante asociado a esta mision")]
         [SerializeField] private CompanionAI companionAI;
-        [Tooltip("Punto de entrega en el dueño donde se posicionará la mascota")]
+        [Tooltip("Punto donde se ubicara la mascota al ser entregada (solo util para el dueno)")]
         [SerializeField] private Transform deliveryDestinationPoint;
 
-        [Header("Audios y Eventos")]
-        [Tooltip("AudioSource para reproducir voces o efectos")]
+        [Header("Audio")]
         [SerializeField] private AudioSource audioSource;
-        [Tooltip("Evento disparado al interactuar")]
-        public UnityEvent onInteract;
-        [Tooltip("Evento disparado al reclutar o entregar la mascota")]
-        public UnityEvent onActionSuccess;
 
-        private void Awake()
+        private void Start()
         {
-            if (audioSource == null)
-                audioSource = GetComponent<AudioSource>();
-            if (companionAI == null && role == NPCRole.LostPet)
-                companionAI = GetComponent<CompanionAI>();
+            if (audioSource == null) audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         }
 
         public string GetInteractionPrompt()
@@ -58,152 +50,121 @@ namespace Replica.Interaction
 
             if (role == NPCRole.Owner)
             {
-                if (state == QuestState.NotStarted)
-                    return $"[E] Hablar con {npcDisplayName}";
-                if (state == QuestState.CompanionRecruited)
-                    return $"[E] Entregar mascota a {npcDisplayName}";
-                if (state == QuestState.InProgress)
-                    return $"[E] Hablar con {npcDisplayName}";
-                return $"[E] Conversar con {npcDisplayName}";
+                if (state == QuestState.CompanionRecruited) return "[E] Hablar (Entregar)";
+                if (state == QuestState.NotStarted) return "[E] Hablar";
+                return "";
             }
-            else // LostPet
+            else
             {
-                if (state == QuestState.Completed)
-                    return string.Empty;
-                if (state == QuestState.CompanionRecruited)
-                    return $"[E] Acariciar a {npcDisplayName}";
-                return $"[E] Ayudar a {npcDisplayName}";
+                if (state == QuestState.InProgress) return "[E] Hablar (Rescatar)";
+                return "";
             }
         }
 
         public bool CanInteract()
         {
             QuestState state = GetCurrentQuestState();
-
-            if (role == NPCRole.LostPet && state == QuestState.Completed)
-                return false;
-
-            return DialogueSystem.Instance != null && !DialogueSystem.Instance.IsInDialogue;
+            if (role == NPCRole.Owner)
+                return state == QuestState.NotStarted || state == QuestState.CompanionRecruited || state == QuestState.Completed;
+            else
+                return state == QuestState.InProgress || state == QuestState.CompanionRecruited;
         }
 
         public void Interact(GameObject interactor)
         {
-            onInteract?.Invoke();
-            QuestState state = GetCurrentQuestState();
-            QuestData data = GetResolvedQuestData();
+            if (!CanInteract()) return;
+
+            // Orientar NPC hacia el jugador
+            Vector3 look = (interactor.transform.position - transform.position).normalized;
+            look.y = 0;
+            if (look.sqrMagnitude > 0.01f)
+            {
+                transform.rotation = Quaternion.LookRotation(look);
+            }
 
             if (role == NPCRole.Owner)
             {
-                HandleOwnerInteraction(state, data);
+                HandleOwnerInteraction();
             }
             else
             {
-                HandlePetInteraction(interactor, state, data);
+                HandlePetInteraction(interactor);
             }
         }
 
-        private void HandleOwnerInteraction(QuestState state, QuestData data)
+        private void HandleOwnerInteraction()
         {
+            QuestState state = GetCurrentQuestState();
+            QuestData data = questData != null ? questData : Object.FindAnyObjectByType<QuestManager>().GetQuestData(questId);
+
             if (state == QuestState.CompanionRecruited)
             {
-                // Entregar mascota
-                string speaker = data != null && !string.IsNullOrEmpty(data.ownerDeliveredDialogue.speakerName)
-                    ? data.ownerDeliveredDialogue.speakerName
-                    : npcDisplayName;
-
-                string[] lines = data != null && data.ownerDeliveredDialogue.lines != null && data.ownerDeliveredDialogue.lines.Length > 0
-                    ? data.ownerDeliveredDialogue.lines
-                    : new string[] { "¡Muchas gracias por traer a mi mascota de vuelta!" };
-
-                PlayAudio(data?.ownerDeliveredDialogue?.voiceOrSfx);
+                string speaker = data != null && !string.IsNullOrEmpty(data.ownerDeliveredDialogue.speakerName) ? data.ownerDeliveredDialogue.speakerName : npcDisplayName;
+                DialogueLine[] lines = data != null && data.ownerDeliveredDialogue.lines != null && data.ownerDeliveredDialogue.lines.Length > 0 ? data.ownerDeliveredDialogue.lines : new DialogueLine[] { new DialogueLine { text = "Muchas gracias por traer a mi mascota de vuelta!" } };
 
                 DialogueSystem.Instance.StartDialogue(speaker, lines, () =>
                 {
                     if (companionAI != null)
                     {
-                        companionAI.Deliver(deliveryDestinationPoint != null ? deliveryDestinationPoint : transform);
+                        companionAI.Deliver(deliveryDestinationPoint);
                     }
-                    QuestManager.Instance.SetQuestState(questId, QuestState.Completed);
-                    onActionSuccess?.Invoke();
+                    Object.FindAnyObjectByType<QuestManager>().SetQuestState(questId, QuestState.Completed);
                 });
             }
-            else if (state == QuestState.NotStarted || state == QuestState.InProgress)
+            else if (state == QuestState.NotStarted)
             {
-                // Pedir ayuda
-                string speaker = data != null && !string.IsNullOrEmpty(data.ownerInitialDialogue.speakerName)
-                    ? data.ownerInitialDialogue.speakerName
-                    : npcDisplayName;
+                string speaker = data != null && !string.IsNullOrEmpty(data.ownerInitialDialogue.speakerName) ? data.ownerInitialDialogue.speakerName : npcDisplayName;
+                DialogueLine[] lines = data != null && data.ownerInitialDialogue.lines != null && data.ownerInitialDialogue.lines.Length > 0 ? data.ownerInitialDialogue.lines : new DialogueLine[] { new DialogueLine { text = "Por favor, ayudame a encontrar a mi companero perdido." } };
 
-                string[] lines = data != null && data.ownerInitialDialogue.lines != null && data.ownerInitialDialogue.lines.Length > 0
-                    ? data.ownerInitialDialogue.lines
-                    : new string[] { "Por favor, ayúdame a encontrar a mi compañero perdido." };
-
-                PlayAudio(data?.ownerInitialDialogue?.voiceOrSfx);
-
+                string cachedQuestId = questId;
                 DialogueSystem.Instance.StartDialogue(speaker, lines, () =>
                 {
                     if (state == QuestState.NotStarted)
                     {
-                        QuestManager.Instance.SetQuestState(questId, QuestState.InProgress);
+                        if (QuestManager.Instance == null) {
+                            UnityEngine.Debug.LogError("QuestManager.Instance ES NULL EN EL CALLBACK!");
+                            return;
+                        }
+                        Object.FindAnyObjectByType<QuestManager>().SetQuestState(cachedQuestId, QuestState.InProgress);
                     }
                 });
             }
             else
             {
-                // Diálogo después de completada la misión
-                DialogueSystem.Instance.StartDialogue(npcDisplayName, new string[] { "Gracias de nuevo por todo, perrito." });
+                DialogueSystem.Instance.StartDialogue(npcDisplayName, new DialogueLine[] { new DialogueLine { text = "Gracias de nuevo por todo, perrito." } });
             }
         }
 
-        private void HandlePetInteraction(GameObject interactor, QuestState state, QuestData data)
+        private void HandlePetInteraction(GameObject player)
         {
-            if (state == QuestState.InProgress || state == QuestState.NotStarted)
+            QuestState state = GetCurrentQuestState();
+            QuestData data = questData != null ? questData : Object.FindAnyObjectByType<QuestManager>().GetQuestData(questId);
+
+            if (state == QuestState.InProgress)
             {
-                string speaker = data != null && !string.IsNullOrEmpty(data.petFoundDialogue.speakerName)
-                    ? data.petFoundDialogue.speakerName
-                    : npcDisplayName;
-
-                string[] lines = data != null && data.petFoundDialogue.lines != null && data.petFoundDialogue.lines.Length > 0
-                    ? data.petFoundDialogue.lines
-                    : new string[] { "¡Hola! ¿Me puedes guiar de vuelta?" };
-
-                PlayAudio(data?.petFoundDialogue?.voiceOrSfx);
+                string speaker = data != null && !string.IsNullOrEmpty(data.petFoundDialogue.speakerName) ? data.petFoundDialogue.speakerName : npcDisplayName;
+                DialogueLine[] lines = data != null && data.petFoundDialogue.lines != null && data.petFoundDialogue.lines.Length > 0 ? data.petFoundDialogue.lines : new DialogueLine[] { new DialogueLine { text = "Hola! Me puedes guiar de vuelta?" } };
 
                 DialogueSystem.Instance.StartDialogue(speaker, lines, () =>
                 {
                     if (companionAI != null)
                     {
-                        companionAI.StartFollowing(interactor.transform);
+                        companionAI.StartFollowing(player.transform);
                     }
-                    QuestManager.Instance.SetQuestState(questId, QuestState.CompanionRecruited);
-                    onActionSuccess?.Invoke();
+                    Object.FindAnyObjectByType<QuestManager>().SetQuestState(questId, QuestState.CompanionRecruited);
                 });
             }
             else if (state == QuestState.CompanionRecruited)
             {
-                DialogueSystem.Instance.StartDialogue(npcDisplayName, new string[] { "Te sigo de cerca." });
-            }
-        }
-
-        private void PlayAudio(AudioClip clip)
-        {
-            if (audioSource != null && clip != null)
-            {
-                audioSource.PlayOneShot(clip);
+                DialogueSystem.Instance.StartDialogue(npcDisplayName, new DialogueLine[] { new DialogueLine { text = "Te sigo de cerca." } });
             }
         }
 
         private QuestState GetCurrentQuestState()
         {
-            return QuestManager.Instance != null 
-                ? QuestManager.Instance.GetQuestState(questId) 
-                : QuestState.NotStarted;
-        }
-
-        private QuestData GetResolvedQuestData()
-        {
-            if (questData != null) return questData;
-            return QuestManager.Instance != null ? QuestManager.Instance.GetQuestData(questId) : null;
+            return QuestManager.Instance != null ? Object.FindAnyObjectByType<QuestManager>().GetQuestState(questId) : QuestState.NotStarted;
         }
     }
 }
+
+

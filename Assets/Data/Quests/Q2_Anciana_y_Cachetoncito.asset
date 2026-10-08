@@ -17,24 +17,26 @@ MonoBehaviour:
   ownerInitialDialogue:
     speakerName: Anciana
     lines:
-    - "Mi cachetoncitoo, \xBFviste a mi cachetoncitoo?"
-    voiceOrSfx: {fileID: 0}
+    - text: Mi cachetoncitoo, viste a mi cachetoncitoo?
+      voiceOrSfx: {fileID: 0}
+    - text: Me ayudas a encontrarlo? (Presiona [E] para Aceptar Mision)
+      voiceOrSfx: {fileID: 0}
   petFoundDialogue:
     speakerName: Cachetoncito
     lines:
-    - "Uy loco mir\xE1 que est\xE1 vieja se asust\xF3 y yo me abr\xED, yo me parcho
-      con usted."
-    voiceOrSfx: {fileID: 0}
+    - text: Uy loco mira que esta vieja se asusto y yo me abri, yo me parcho con
+        usted.
+      voiceOrSfx: {fileID: 0}
   ownerDeliveredDialogue:
     speakerName: Anciana
     lines:
-    - "\xA1Cachetoncitoo!"
-    voiceOrSfx: {fileID: 0}
+    - text: Cachetoncitoo!
+      voiceOrSfx: {fileID: 0}
   petDeliveredDialogue:
     speakerName: Cachetoncito
     lines:
-    - "\xA1Noooooo!"
-    voiceOrSfx: {fileID: 0}
+    - text: Noooooo!
+      voiceOrSfx: {fileID: 0}
   onQuestStarted:
     m_PersistentCalls:
       m_Calls: []

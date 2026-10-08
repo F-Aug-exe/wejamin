@@ -13,24 +13,26 @@ namespace Replica.Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
-        [Header("Configuración de Movimiento")]
+        [Header("Configuracion de Movimiento")]
         [Tooltip("Velocidad al caminar")]
         [SerializeField] private float walkSpeed = 3.5f;
         [Tooltip("Velocidad al correr")]
         [SerializeField] private float runSpeed = 7.0f;
-        [Tooltip("Suavizado de rotación hacia la dirección de movimiento")]
+        [Tooltip("Suavizado de rotacion hacia la direccion de movimiento")]
         [SerializeField] private float rotationSmoothTime = 0.1f;
         [Tooltip("Gravedad aplicada al jugador")]
         [SerializeField] private float gravity = -18.0f;
+        [Tooltip("Fuerza del salto")]
+        [SerializeField] private float jumpHeight = 1.5f;
 
         [Header("Referencias Opcionales")]
-        [Tooltip("Cámara principal (si está vacía, se buscará Camera.main)")]
+        [Tooltip("Camara principal (si esta vacia, se buscara Camera.main)")]
         [SerializeField] private Transform cameraTransform;
-        [Tooltip("Animator del perro (debe contener parámetros 'Speed' y 'IsRunning')")]
+        [Tooltip("Animator del perro (debe contener parametros 'Speed' y 'IsRunning')")]
         [SerializeField] private Animator animator;
 
         [Header("Estado")]
-        [Tooltip("Puntos de montaje para acompañantes montados (ej. lomo, cabeza)")]
+        [Tooltip("Puntos de montaje para acompanantes montados (ej. lomo, cabeza)")]
         public Transform mountPointBack;
         public Transform mountPointHead;
 
@@ -68,7 +70,8 @@ namespace Replica.Player
 
         private void Update()
         {
-            ApplyGravity();
+            bool jumpPressed = canMove && ReadJumpInput();
+            ApplyGravity(jumpPressed);
 
             if (!canMove) return;
 
@@ -125,6 +128,17 @@ namespace Replica.Player
             return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         }
 
+        private bool ReadJumpInput()
+        {
+#if ENABLE_INPUT_SYSTEM
+            if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+                return true;
+            if (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame)
+                return true;
+#endif
+            return Input.GetKeyDown(KeyCode.Space);
+        }
+
         private Vector3 CalculateMoveDirection(Vector2 input)
         {
             if (input.sqrMagnitude < 0.001f) return Vector3.zero;
@@ -139,16 +153,24 @@ namespace Replica.Player
             return (forward * input.y + right * input.x).normalized;
         }
 
-        private void ApplyGravity()
+        private void ApplyGravity(bool jumpPressed)
         {
             if (characterController.isGrounded && currentVelocityY < 0f)
             {
                 currentVelocityY = -2f;
             }
-            else
+            
+            if (characterController.isGrounded && jumpPressed)
             {
-                currentVelocityY += gravity * Time.deltaTime;
+                currentVelocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                // Also trigger jump animation if there is one
+                if (animator != null) {
+                    // Si tienes una animacion de salto
+                    // animator.SetTrigger("Jump");
+                }
             }
+
+            currentVelocityY += gravity * Time.deltaTime;
         }
 
         private void UpdateAnimator(float inputMagnitude, bool running)

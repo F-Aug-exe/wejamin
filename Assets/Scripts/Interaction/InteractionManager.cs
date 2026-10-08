@@ -25,6 +25,7 @@ namespace Replica.Interaction
 
         private readonly List<IInteractable> nearbyInteractables = new List<IInteractable>();
         private IInteractable currentInteractable;
+        private float lastInteractTime;
 
         private void Update()
         {
@@ -96,9 +97,10 @@ namespace Replica.Interaction
                 interactPressed = true;
             }
 
-            if (interactPressed && currentInteractable.CanInteract())
+            if (interactPressed && currentInteractable.CanInteract() && Time.time - lastInteractTime > 0.2f && (Replica.Dialogue.DialogueSystem.Instance == null || !Replica.Dialogue.DialogueSystem.Instance.IsInDialogue))
             {
                 currentInteractable.Interact(gameObject);
+                lastInteractTime = Time.time;
             }
         }
 

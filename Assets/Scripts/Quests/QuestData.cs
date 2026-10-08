@@ -7,42 +7,49 @@ namespace Replica.Quests
     public enum QuestState
     {
         NotStarted,
-        InProgress,       // Dueño contactado, buscando mascota
+        InProgress,       // Dueno contactado, buscando mascota
         CompanionRecruited,// Mascota encontrada, siguiendo al jugador
-        Completed          // Mascota entregada con éxito
+        Completed          // Mascota entregada con exito
+    }
+
+    [System.Serializable]
+    public class DialogueLine
+    {
+        [TextArea(2, 5)]
+        public string text;
+        [Tooltip("Sonido opcional que se reproduce al mostrar esta lnea")]
+        public AudioClip voiceOrSfx;
     }
 
     [System.Serializable]
     public class DialogueData
     {
         public string speakerName;
-        [TextArea(2, 5)]
-        public string[] lines;
-        public AudioClip voiceOrSfx;
+        public DialogueLine[] lines;
     }
 
     /// <summary>
-    /// Configuración de una misión de rescate (ScriptableObject).
-    /// Permite configurar diálogos, textos y eventos de audio desde el Inspector de Unity.
+    /// Configuracion de una mision de rescate (ScriptableObject).
+    /// Permite configurar dialogos, textos y eventos de audio desde el Inspector de Unity.
     /// </summary>
     [CreateAssetMenu(fileName = "NewQuestData", menuName = "Replica/Quest Data", order = 1)]
     public class QuestData : ScriptableObject
     {
-        [Header("Información Básica")]
+        [Header("Informacion Basica")]
         public string questId = "Q1";
         public string questTitle = "Madre y Cachorro";
 
-        [Header("Diálogo 1: Dueño pidiendo ayuda")]
+        [Header("Dialogo 1: Dueno pidiendo ayuda")]
         public DialogueData ownerInitialDialogue;
 
-        [Header("Diálogo 2: Mascota encontrada")]
+        [Header("Dialogo 2: Mascota encontrada")]
         public DialogueData petFoundDialogue;
 
-        [Header("Diálogo 3: Entrega al dueño")]
+        [Header("Dialogo 3: Entrega al dueno")]
         public DialogueData ownerDeliveredDialogue;
         public DialogueData petDeliveredDialogue;
 
-        [Header("Eventos de Audio / Cinemáticas")]
+        [Header("Eventos de Audio / Cinematicas")]
         public UnityEvent onQuestStarted;
         public UnityEvent onCompanionRecruited;
         public UnityEvent onQuestCompleted;

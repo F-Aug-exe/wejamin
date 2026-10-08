@@ -10,30 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2582871bfc7baf808b7eff7d178be239, type: 3}
-  m_Name: Q4_Cachorro_y_Cuervo
+  m_Name: Q4_Dueno_y_Cuervo
   m_EditorClassIdentifier: Assembly-CSharp::Replica.Quests.QuestData
   questId: Q4
-  questTitle: Cachorro y Cuervo
+  questTitle: Dueno y Cuervo
   ownerInitialDialogue:
-    speakerName: Cachorro
+    speakerName: Dueno Cuervo
     lines:
-    - "\xBFVieron un cuervo que habla mucho?"
-    voiceOrSfx: {fileID: 0}
+    - text: Vieron un cuervo que habla mucho?
+      voiceOrSfx: {fileID: 0}
+    - text: Me ayudas a encontrarlo? (Presiona [E] para Aceptar Mision)
+      voiceOrSfx: {fileID: 0}
   petFoundDialogue:
     speakerName: Cuervo
     lines:
-    - "Hola canino, se me perdi\xF3 un humano..."
-    voiceOrSfx: {fileID: 0}
+    - text: Hola canino, se me perdio un humano...
+      voiceOrSfx: {fileID: 0}
   ownerDeliveredDialogue:
-    speakerName: Cachorro
+    speakerName: Dueno Cuervo
     lines:
-    - "\xA1Chico! Te me hab\xEDas perdido."
-    voiceOrSfx: {fileID: 0}
+    - text: Chico! Te me habas perdido.
+      voiceOrSfx: {fileID: 0}
   petDeliveredDialogue:
     speakerName: Cuervo
     lines:
-    - "\xA1Caw! \xA1Aqu\xED estoy!"
-    voiceOrSfx: {fileID: 0}
+    - text: Caw! Aqu estoy!
+      voiceOrSfx: {fileID: 0}
   onQuestStarted:
     m_PersistentCalls:
       m_Calls: []

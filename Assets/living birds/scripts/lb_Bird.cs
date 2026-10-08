@@ -123,7 +123,7 @@ public class lb_Bird : MonoBehaviour {
 		anim.SetBool (flyingBoolHash,true);
 		anim.SetBool(landingBoolHash, false);
 
-		while(anim.GetCurrentAnimatorStateInfo(0).nameHash != flyAnimationHash){
+		while(anim.GetCurrentAnimatorStateInfo(0).fullPathHash != flyAnimationHash){
 			yield return 0;
 		}
 
@@ -323,7 +323,7 @@ public class lb_Bird : MonoBehaviour {
 	}
 	
 	void OnGroundBehaviors(){
-		idle = anim.GetCurrentAnimatorStateInfo(0).nameHash == idleAnimationHash;
+		idle = anim.GetCurrentAnimatorStateInfo(0).fullPathHash == idleAnimationHash;
 		if(rb != null && !rb.isKinematic){
 			rb.isKinematic = true;
 		}

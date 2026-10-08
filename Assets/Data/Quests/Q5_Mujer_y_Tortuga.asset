@@ -17,24 +17,25 @@ MonoBehaviour:
   ownerInitialDialogue:
     speakerName: Mujer
     lines:
-    - "Saqu\xE9 a pasear a mi tortuga y ya no la veo..."
-    voiceOrSfx: {fileID: 0}
+    - text: Saque a pasear a mi tortuga y ya no la veo...
+      voiceOrSfx: {fileID: 0}
+    - text: Me ayudas a encontrarla? (Presiona [E] para Aceptar Mision)
+      voiceOrSfx: {fileID: 0}
   petFoundDialogue:
     speakerName: Tortuga
     lines:
-    - "Amigo, esa vieja me pate\xF3 y qued\xE9 as\xED. \xBFMe puedes llevar en tu
-      lomo?"
-    voiceOrSfx: {fileID: 0}
+    - text: Amigo, esa vieja me pateo y quede as. Me puedes llevar en tu lomo?
+      voiceOrSfx: {fileID: 0}
   ownerDeliveredDialogue:
     speakerName: Mujer
     lines:
-    - "Mira d\xF3nde estabas, tortuguita."
-    voiceOrSfx: {fileID: 0}
+    - text: Mira donde estabas, tortuguita.
+      voiceOrSfx: {fileID: 0}
   petDeliveredDialogue:
     speakerName: Tortuga
     lines:
-    - Tetranutria...
-    voiceOrSfx: {fileID: 0}
+    - text: Tetranutria...
+      voiceOrSfx: {fileID: 0}
   onQuestStarted:
     m_PersistentCalls:
       m_Calls: []

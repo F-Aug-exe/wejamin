@@ -36,7 +36,7 @@ namespace Replica.Utils
             if (animator == null || animator.runtimeAnimatorController == null || !animator.isActiveAndEnabled)
                 return false;
 
-            int id = animator.GetInstanceID();
+            int id = animator.GetHashCode();
             if (!Cache.TryGetValue(id, out var parameters))
             {
                 if (!animator.isInitialized)

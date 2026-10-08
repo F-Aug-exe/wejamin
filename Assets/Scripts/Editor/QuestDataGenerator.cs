@@ -1,7 +1,6 @@
-#if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEngine;
-using System.IO;
 using Replica.Quests;
 
 namespace Replica.EditorTools
@@ -10,7 +9,7 @@ namespace Replica.EditorTools
     {
         private const string FolderPath = "Assets/Data/Quests";
 
-        [MenuItem("Tools/Réplica/Generar Misiones Predefinidas")]
+        [MenuItem("Tools/Rplica/Generar Misiones Predefinidas")]
         public static void GenerateDefaultQuests()
         {
             if (!Directory.Exists(FolderPath))
@@ -18,49 +17,52 @@ namespace Replica.EditorTools
                 Directory.CreateDirectory(FolderPath);
             }
 
-            // Q1: Madre y Cachorro
-            CreateOrUpdateQuest("Q1", "Madre y Cachorro",
-                "Madre", new[] { "El cachorro mío justo ta saliendo de clase pero aún no llega." },
-                "Cachorro", new[] { "Nos dijeron que esperemos a que nos vengan a buscar. ¿Voy contigo?" },
-                "Madre", new[] { "Gracias perrito." },
-                "Cachorro", new[] { "¡Mami!" }
+            CreateOrUpdateQuest("Q1", "Madre y Nino",
+                "Madre", new[] { "Mi nino justo estaba saliendo de clase pero aun no llega.", "Me ayudas a buscarlo? (Presiona [E] para Aceptar Mision)" },
+                "Nino", new[] { "Nos dijeron que esperemos a que nos vengan a buscar. Voy contigo?" },
+                "Madre", new[] { "Gracias perrito por traer a mi hijo." },
+                "Nino", new[] { "Mami!" }
             );
 
-            // Q2: Anciana y Cachetoncito
             CreateOrUpdateQuest("Q2", "Anciana y Cachetoncito",
-                "Anciana", new[] { "Mi cachetoncitoo, ¿viste a mi cachetoncitoo?" },
-                "Cachetoncito", new[] { "Uy loco mirá que está vieja se asustó y yo me abrí, yo me parcho con usted." },
-                "Anciana", new[] { "¡Cachetoncitoo!" },
-                "Cachetoncito", new[] { "¡Noooooo!" }
+                "Anciana", new[] { "Mi cachetoncitoo, viste a mi cachetoncitoo?", "Me ayudas a encontrarlo? (Presiona [E] para Aceptar Mision)" },
+                "Cachetoncito", new[] { "Uy loco mira que esta vieja se asusto y yo me abri, yo me parcho con usted." },
+                "Anciana", new[] { "Cachetoncitoo!" },
+                "Cachetoncito", new[] { "Noooooo!" }
             );
 
-            // Q3: Ciego y Perro de Asistencia
-            CreateOrUpdateQuest("Q3", "Ciego y Perro Guía",
-                "Humano Ciego", new[] { "Mi perro de asistencia, debe haberse asustado con el temblor..." },
-                "Perro Guía", new[] { "Oye, ¿viste a un humano ciego? Se me perdió..." },
-                "Humano Ciego", new[] { "¡Amigo mío, estás aquí! Gracias, perrito." },
-                "Perro Guía", new[] { "Sniff- ¡Guau!" }
+            CreateOrUpdateQuest("Q3", "Ciego y Perro Guia",
+                "Humano Ciego", new[] { "Mi perro de asistencia, debe haberse asustado con el temblor...", "Me ayudas a buscarlo? (Presiona [E] para Aceptar Mision)" },
+                "Perro Gua", new[] { "Oye, viste a un humano ciego? Se me perdio..." },
+                "Humano Ciego", new[] { "Amigo mo, estas aqu! Gracias, perrito." },
+                "Perro Gua", new[] { "Sniff- Guau!" }
             );
 
-            // Q4: Cachorro y Cuervo
-            CreateOrUpdateQuest("Q4", "Cachorro y Cuervo",
-                "Cachorro", new[] { "¿Vieron un cuervo que habla mucho?" },
-                "Cuervo", new[] { "Hola canino, se me perdió un humano..." },
-                "Cachorro", new[] { "¡Chico! Te me habías perdido." },
-                "Cuervo", new[] { "¡Caw! ¡Aquí estoy!" }
+            CreateOrUpdateQuest("Q4", "Dueno y Cuervo",
+                "Dueno Cuervo", new[] { "Vieron un cuervo que habla mucho?", "Me ayudas a encontrarlo? (Presiona [E] para Aceptar Mision)" },
+                "Cuervo", new[] { "Hola canino, se me perdio un humano..." },
+                "Dueno Cuervo", new[] { "Chico! Te me habas perdido." },
+                "Cuervo", new[] { "Caw! Aqu estoy!" }
             );
 
-            // Q5: Mujer y Tortuga
             CreateOrUpdateQuest("Q5", "Mujer y Tortuga",
-                "Mujer", new[] { "Saqué a pasear a mi tortuga y ya no la veo..." },
-                "Tortuga", new[] { "Amigo, esa vieja me pateó y quedé así. ¿Me puedes llevar en tu lomo?" },
-                "Mujer", new[] { "Mira dónde estabas, tortuguita." },
+                "Mujer", new[] { "Saque a pasear a mi tortuga y ya no la veo...", "Me ayudas a encontrarla? (Presiona [E] para Aceptar Mision)" },
+                "Tortuga", new[] { "Amigo, esa vieja me pateo y quede as. Me puedes llevar en tu lomo?" },
+                "Mujer", new[] { "Mira donde estabas, tortuguita." },
                 "Tortuga", new[] { "Tetranutria..." }
             );
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("[QuestDataGenerator] ¡Las 5 misiones fueron generadas exitosamente en " + FolderPath + "!");
+            Debug.Log("[QuestDataGenerator] Las 5 misiones fueron generadas exitosamente en " + FolderPath + "!");
+        }
+
+        private static DialogueLine[] ToLines(string[] strings) {
+            var lines = new DialogueLine[strings.Length];
+            for (int i=0; i<strings.Length; i++) {
+                lines[i] = new DialogueLine { text = strings[i] };
+            }
+            return lines;
         }
 
         private static void CreateOrUpdateQuest(
@@ -82,14 +84,12 @@ namespace Replica.EditorTools
 
             quest.questId = questId;
             quest.questTitle = title;
-
-            quest.ownerInitialDialogue = new DialogueData { speakerName = ownerSpeaker, lines = ownerLines };
-            quest.petFoundDialogue = new DialogueData { speakerName = petSpeaker, lines = petLines };
-            quest.ownerDeliveredDialogue = new DialogueData { speakerName = ownerDeliveredSpeaker, lines = ownerDeliveredLines };
-            quest.petDeliveredDialogue = new DialogueData { speakerName = petDeliveredSpeaker, lines = petDeliveredLines };
+            quest.ownerInitialDialogue = new DialogueData { speakerName = ownerSpeaker, lines = ToLines(ownerLines) };
+            quest.petFoundDialogue = new DialogueData { speakerName = petSpeaker, lines = ToLines(petLines) };
+            quest.ownerDeliveredDialogue = new DialogueData { speakerName = ownerDeliveredSpeaker, lines = ToLines(ownerDeliveredLines) };
+            quest.petDeliveredDialogue = new DialogueData { speakerName = petDeliveredSpeaker, lines = ToLines(petDeliveredLines) };
 
             EditorUtility.SetDirty(quest);
         }
     }
 }
-#endif

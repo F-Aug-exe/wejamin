@@ -21,16 +21,16 @@ namespace Replica.UI
 
         private void Start()
         {
-            var interactionManager = FindFirstObjectByType<InteractionManager>();
+            var interactionManager = FindAnyObjectByType<InteractionManager>();
             if (interactionManager != null)
             {
                 interactionManager.onPromptChanged.AddListener(SetInteractionPrompt);
             }
 
-            if (QuestManager.Instance != null)
+            if (Object.FindAnyObjectByType<QuestManager>() != null)
             {
-                QuestManager.Instance.onQuestCompletedCountChanged.AddListener(UpdateQuestCounter);
-                UpdateQuestCounter(QuestManager.Instance.CompletedQuestsCount);
+                Object.FindAnyObjectByType<QuestManager>().onQuestCompletedCountChanged.AddListener(UpdateQuestCounter);
+                UpdateQuestCounter(Object.FindAnyObjectByType<QuestManager>().CompletedQuestsCount);
             }
             else
             {
@@ -54,9 +54,10 @@ namespace Replica.UI
         {
             if (questCounterText != null)
             {
-                int total = QuestManager.Instance != null ? QuestManager.Instance.TotalQuestsCount : 5;
+                int total = Object.FindAnyObjectByType<QuestManager>() != null ? Object.FindAnyObjectByType<QuestManager>().TotalQuestsCount : 5;
                 questCounterText.text = $"Rescates: {completed} / {total}";
             }
         }
     }
 }
+

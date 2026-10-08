@@ -9,64 +9,54 @@ using UnityEngine.InputSystem;
 
 namespace Replica.Dialogue
 {
-    /// <summary>
-    /// Sistema de Diálogo Singleton.
-    /// Arrastra este componente a un GameObject en la jerarquía (ej. 'DialogueManager') y conecta los elementos de UI Canvas en el Inspector.
-    /// </summary>
     public class DialogueSystem : MonoBehaviour
     {
         public static DialogueSystem Instance { get; private set; }
 
         [Header("Referencias de UI (Inspector)")]
-        [Tooltip("Panel contenedor del cuadro de diálogo (se activará/desactivará)")]
         [SerializeField] private GameObject dialoguePanel;
-        [Tooltip("Texto para el nombre del personaje que habla")]
         [SerializeField] private TextMeshProUGUI speakerNameText;
-        [Tooltip("Texto principal del diálogo")]
         [SerializeField] private TextMeshProUGUI dialogueContentText;
-        [Tooltip("Indicador visual para continuar (ej. flecha parpadeante o texto '[E] Continuar')")]
         [SerializeField] private GameObject continueIndicator;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource audioSource;
+
         [Header("Efecto de Escritura")]
-        [Tooltip("Velocidad de aparición de letras (segundos por caracter). 0 para instantáneo.")]
         [SerializeField] private float typingSpeed = 0.02f;
 
-        [Header("Eventos Globales")]
-        [Tooltip("Evento disparado al comenzar cualquier diálogo")]
         public UnityEvent onDialogueStarted;
-        [Tooltip("Evento disparado al finalizar el diálogo activo")]
         public UnityEvent onDialogueEnded;
 
-        private readonly Queue<string> currentLines = new Queue<string>();
-        private string currentFullLine = "";
+        private readonly Queue<Replica.Quests.DialogueLine> currentLines = new Queue<Replica.Quests.DialogueLine>();
+        private Replica.Quests.DialogueLine currentFullLine;
         private Coroutine typingCoroutine;
         private bool isTyping = false;
         private UnityAction onCompleteCallback;
         private Replica.Player.PlayerController cachedPlayerController;
 
         public bool IsInDialogue { get; private set; } = false;
+        private float dialogueStartTime;
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
+            
             Instance = this;
 
             if (dialoguePanel != null)
                 dialoguePanel.SetActive(false);
+
+            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         }
 
         private void Start()
         {
-            cachedPlayerController = FindFirstObjectByType<Replica.Player.PlayerController>();
+            cachedPlayerController = FindAnyObjectByType<Replica.Player.PlayerController>();
         }
 
         private void Update()
         {
-            if (!IsInDialogue) return;
+            if (!IsInDialogue || Time.time - dialogueStartTime < 0.2f) return;
 
             bool advancePressed = false;
 #if ENABLE_INPUT_SYSTEM
@@ -84,7 +74,6 @@ namespace Replica.Dialogue
             {
                 if (isTyping)
                 {
-                    // Completar línea instantáneamente
                     CompleteCurrentLineInstantly();
                 }
                 else
@@ -94,10 +83,7 @@ namespace Replica.Dialogue
             }
         }
 
-        /// <summary>
-        /// Inicia una conversación con nombre de hablante y lista de líneas.
-        /// </summary>
-        public void StartDialogue(string speaker, string[] lines, UnityAction onComplete = null)
+        public void StartDialogue(string speaker, Replica.Quests.DialogueLine[] lines, UnityAction onComplete = null)
         {
             if (lines == null || lines.Length == 0)
             {
@@ -106,12 +92,13 @@ namespace Replica.Dialogue
             }
 
             if (cachedPlayerController == null)
-                cachedPlayerController = FindFirstObjectByType<Replica.Player.PlayerController>();
+                cachedPlayerController = FindAnyObjectByType<Replica.Player.PlayerController>();
 
             if (cachedPlayerController != null)
                 cachedPlayerController.CanMove = false;
 
             IsInDialogue = true;
+            dialogueStartTime = Time.time;
             onCompleteCallback = onComplete;
 
             if (dialoguePanel != null)
@@ -130,10 +117,7 @@ namespace Replica.Dialogue
             DisplayNextLine();
         }
 
-        /// <summary>
-        /// Sobrecarga para iniciar diálogo sin especificar hablante por separado.
-        /// </summary>
-        public void StartDialogue(string[] lines, UnityAction onComplete = null)
+        public void StartDialogue(Replica.Quests.DialogueLine[] lines, UnityAction onComplete = null)
         {
             StartDialogue("", lines, onComplete);
         }
@@ -150,14 +134,18 @@ namespace Replica.Dialogue
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
 
+            if (currentFullLine.voiceOrSfx != null && audioSource != null) {
+                audioSource.PlayOneShot(currentFullLine.voiceOrSfx);
+            }
+
             if (typingSpeed > 0f)
             {
-                typingCoroutine = StartCoroutine(TypeLine(currentFullLine));
+                typingCoroutine = StartCoroutine(TypeLine(currentFullLine.text));
             }
             else
             {
                 if (dialogueContentText != null)
-                    dialogueContentText.text = currentFullLine;
+                    dialogueContentText.text = currentFullLine.text;
                 isTyping = false;
                 if (continueIndicator != null)
                     continueIndicator.SetActive(true);
@@ -172,6 +160,8 @@ namespace Replica.Dialogue
 
             if (dialogueContentText != null)
                 dialogueContentText.text = "";
+
+            if (string.IsNullOrEmpty(line)) line = "";
 
             foreach (char letter in line.ToCharArray())
             {
@@ -190,8 +180,8 @@ namespace Replica.Dialogue
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
 
-            if (dialogueContentText != null)
-                dialogueContentText.text = currentFullLine;
+            if (dialogueContentText != null && currentFullLine != null)
+                dialogueContentText.text = currentFullLine.text;
 
             isTyping = false;
             if (continueIndicator != null)
@@ -216,3 +206,4 @@ namespace Replica.Dialogue
         }
     }
 }
+

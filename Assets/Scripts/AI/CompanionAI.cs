@@ -76,7 +76,7 @@ namespace Replica.AI
         {
             if (playerTarget == null)
             {
-                var player = FindFirstObjectByType<Replica.Player.PlayerController>();
+                var player = FindAnyObjectByType<Replica.Player.PlayerController>();
                 if (player != null)
                     playerTarget = player.transform;
             }
@@ -115,7 +115,7 @@ namespace Replica.AI
                 playerTarget = target;
             else if (playerTarget == null)
             {
-                var player = FindFirstObjectByType<Replica.Player.PlayerController>();
+                var player = FindAnyObjectByType<Replica.Player.PlayerController>();
                 if (player != null)
                     playerTarget = player.transform;
             }

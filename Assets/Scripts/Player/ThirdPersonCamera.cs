@@ -51,7 +51,7 @@ namespace Replica.Player
         {
             if (target == null)
             {
-                var player = FindFirstObjectByType<PlayerController>();
+                var player = FindAnyObjectByType<PlayerController>();
                 if (player != null) target = player.transform;
             }
 
@@ -60,6 +60,11 @@ namespace Replica.Player
                 yaw = target.eulerAngles.y;
                 currentFocus = target.position + targetOffset;
                 ApplyTransform(true);
+                Debug.Log($"[ThirdPersonCamera] Iniciada correctamente siguiendo a {target.name}");
+            }
+            else
+            {
+                Debug.LogError("[ThirdPersonCamera] No se encontró target ni PlayerController.");
             }
 
             if (!requireRightMouseButton) LockCursor(true);

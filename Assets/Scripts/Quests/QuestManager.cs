@@ -6,153 +6,126 @@ using Replica.Dialogue;
 
 namespace Replica.Quests
 {
-    /// <summary>
-    /// Administrador Singleton del progreso de misiones y del flujo general del juego.
-    /// Arrastra este componente al objeto 'GameManager' o 'QuestManager' en la escena.
-    /// </summary>
     public class QuestManager : MonoBehaviour
     {
         public static QuestManager Instance { get; private set; }
 
-        [Header("Configuración de Misiones")]
+        [Header("Configuracion de Misiones")]
         [Tooltip("Lista de ScriptableObjects con las 5 misiones principales (Q1 a Q5)")]
         [SerializeField] private List<QuestData> quests = new List<QuestData>();
 
-        [Header("Cinemática / Secuencia Final")]
+        [Header("Cinematica / Secuencia Final")]
         [Tooltip("Referencia al controlador de la secuencia final (Q6)")]
         [SerializeField] private FinalSequenceController finalSequenceController;
 
-        [Header("Introducción (Q0.1)")]
-        [Tooltip("¿Reproducir la narración inicial al iniciar la escena?")]
+        [Header("Introduccion (Q0.1)")]
+        [Tooltip("Reproducir la narracion inicial al iniciar la escena?")]
         [SerializeField] private bool playIntroOnStart = true;
-        [Tooltip("Diálogo del prólogo")]
+        [Tooltip("Dialogo del prologo")]
         [SerializeField] private DialogueData introDialogue = new DialogueData
         {
             speakerName = "Narrador",
-            lines = new string[] { "Un día un perrito paseaba con su humano, cuando fueron interrumpidos por un temblor..." }
+            lines = new DialogueLine[] { new DialogueLine { text = "Un da un perrito paseaba con su humano, cuando fueron interrumpidos por un temblor..." } }
         };
 
         [Header("Eventos")]
-        [Tooltip("Disparado cada vez que se completa una misión (parámetro: número de misiones completadas)")]
+        [Tooltip("Disparado cada vez que se completa una mision (parametro: numero de misiones completadas)")]
         public UnityEvent<int> onQuestCompletedCountChanged;
         [Tooltip("Disparado cuando se han completado las 5 misiones principales")]
         public UnityEvent onAllQuestsCompleted;
 
-        private readonly Dictionary<string, QuestState> questStates = new Dictionary<string, QuestState>();
-        private int completedCount = 0;
-
-        public int CompletedQuestsCount => completedCount;
-        public int TotalQuestsCount => quests.Count > 0 ? quests.Count : 5;
+        private Dictionary<string, QuestState> questStates = new Dictionary<string, QuestState>();
+        private int completedQuestsCount = 0;
+        public int CompletedQuestsCount => completedQuestsCount;
+        public int TotalQuestsCount => quests.Count;
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
+            UnityEngine.Debug.Log("QuestManager Awake EJECUTADO! Instance = this");
             Instance = this;
-
-            InitializeDefaultQuests();
-        }
-
-        private void Start()
-        {
-            if (playIntroOnStart && DialogueSystem.Instance != null && introDialogue.lines != null && introDialogue.lines.Length > 0)
-            {
-                DialogueSystem.Instance.StartDialogue(introDialogue.speakerName, introDialogue.lines);
-            }
-        }
-
-        private void InitializeDefaultQuests()
-        {
-            // Inicializar estados de Q1 a Q5
-            for (int i = 1; i <= 5; i++)
-            {
-                string id = "Q" + i;
-                if (!questStates.ContainsKey(id))
-                {
-                    questStates[id] = QuestState.NotStarted;
-                }
-            }
 
             foreach (var q in quests)
             {
-                if (q != null && !questStates.ContainsKey(q.questId))
+                if (q != null)
                 {
                     questStates[q.questId] = QuestState.NotStarted;
                 }
             }
         }
 
-        public QuestState GetQuestState(string questId)
+        private void Start()
         {
-            return questStates.TryGetValue(questId, out var state) ? state : QuestState.NotStarted;
+            if (playIntroOnStart)
+            {
+                // Un pequeno delay para que todo cargue antes del dialogo
+                Invoke(nameof(PlayIntro), 1f);
+            }
         }
 
-        public void SetQuestState(string questId, QuestState state)
+        private void PlayIntro()
         {
-            questStates[questId] = state;
-
-            var questData = GetQuestData(questId);
-            if (questData != null)
+            if (DialogueSystem.Instance != null && introDialogue != null && introDialogue.lines.Length > 0)
             {
-                switch (state)
-                {
-                    case QuestState.InProgress:
-                        questData.onQuestStarted?.Invoke();
-                        break;
-                    case QuestState.CompanionRecruited:
-                        questData.onCompanionRecruited?.Invoke();
-                        break;
-                    case QuestState.Completed:
-                        questData.onQuestCompleted?.Invoke();
-                        break;
-                }
+                DialogueSystem.Instance.StartDialogue(introDialogue.speakerName, introDialogue.lines);
             }
+        }
 
-            if (state == QuestState.Completed)
-            {
-                RecalculateCompletedQuests();
-            }
+        public QuestState GetQuestState(string questId)
+        {
+            if (questStates.TryGetValue(questId, out QuestState state))
+                return state;
+            return QuestState.NotStarted;
         }
 
         public QuestData GetQuestData(string questId)
         {
-            return quests.Find(q => q != null && q.questId.Equals(questId, StringComparison.OrdinalIgnoreCase));
+            return quests.Find(q => q != null && q.questId == questId);
         }
 
-        private void RecalculateCompletedQuests()
+        public void SetQuestState(string questId, QuestState newState)
         {
-            int count = 0;
-            foreach (var kvp in questStates)
+            if (questStates.ContainsKey(questId))
             {
-                if (kvp.Value == QuestState.Completed)
-                    count++;
-            }
-            completedCount = count;
-            onQuestCompletedCountChanged?.Invoke(completedCount);
+                QuestState oldState = questStates[questId];
+                questStates[questId] = newState;
+                Debug.Log($"Mision {questId} actualiz a estado: {newState}");
 
-            if (completedCount >= 5)
+                var data = GetQuestData(questId);
+
+                if (newState == QuestState.InProgress && oldState == QuestState.NotStarted)
+                {
+                    data?.onQuestStarted?.Invoke();
+                }
+                else if (newState == QuestState.CompanionRecruited && oldState != QuestState.CompanionRecruited)
+                {
+                    data?.onCompanionRecruited?.Invoke();
+                }
+                else if (newState == QuestState.Completed && oldState != QuestState.Completed)
+                {
+                    data?.onQuestCompleted?.Invoke();
+                    completedQuestsCount++;
+                    onQuestCompletedCountChanged?.Invoke(completedQuestsCount);
+
+                    CheckAllQuestsCompleted();
+                }
+            }
+        }
+
+        private void CheckAllQuestsCompleted()
+        {
+            int total = quests.Count;
+            if (total > 0 && completedQuestsCount >= total)
             {
+                Debug.Log("Todas las misiones principales completadas!");
                 onAllQuestsCompleted?.Invoke();
-                TriggerFinalSequence();
-            }
-        }
-
-        /// <summary>
-        /// Activa la secuencia final Q6
-        /// </summary>
-        public void TriggerFinalSequence()
-        {
-            if (finalSequenceController != null)
-            {
-                finalSequenceController.StartFinalSequence();
-            }
-            else
-            {
-                Debug.Log("[QuestManager] ¡Las 5 misiones han sido completadas! Asigna un FinalSequenceController para reproducir la cinemática final.");
+                
+                if (finalSequenceController != null)
+                {
+                    finalSequenceController.TriggerFinalSequence();
+                }
             }
         }
     }
 }
+
+
